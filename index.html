@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="ru" class="bg-[#f4f6fa] text-slate-800">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>НСО в Национальном рейтинге НТР. Сводка</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<style>
+  html, body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #e8edf3; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+  table.dataTable { border-collapse: separate !important; border-spacing: 0; width: 100% !important; }
+  table.dataTable thead th { background: #ffffff !important; color: #64748b !important; border-bottom: 1px solid #e8edf3 !important; font-weight: 600 !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: .05em; padding: 12px 14px !important; }
+  table.dataTable tbody td { background: #ffffff !important; color: #334155 !important; border-bottom: 1px solid #e2e8f0 !important; padding: 12px 14px !important; font-size: 14px; }
+  table.dataTable tbody tr:hover td { background: #f1f5f9 !important; }
+  .dataTables_wrapper .dataTables_length select,
+  .dataTables_wrapper .dataTables_filter input { background: #ffffff !important; color: #1e293b !important; border: 1px solid #cbd5e1 !important; border-radius: 8px; padding: 6px 10px; font-size: 13px; }
+  .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_length { color: #64748b !important; font-size: 13px; }
+  .dataTables_wrapper .dataTables_paginate .paginate_button { color: #64748b !important; border-radius: 6px !important; padding: 4px 10px !important; background: #ffffff !important; border: 1px solid #e2e8f0 !important; margin: 0 2px; }
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
+
+  .nav-btn { transition: all 0.2s ease; }
+  .nav-btn:hover { background: #eef2f7; color: #1e293b; }
+  .nav-btn.active { background: #1d4ed8; color: #fff; box-shadow: 0 2px 6px -2px rgba(29, 78, 216, 0.35); }
+
+  .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05); }
+  .card-soft { background: #f8fafc; border: 1px solid #e8edf3; border-radius: 10px; }
+
+  .chip { display: inline-flex; align-items: center; justify-content: center; min-width: 50px; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .chip-green  { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .chip-yellow { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+  .chip-red    { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+  .chip-gray   { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 999px; margin-right: 6px; }
+  .dot-gov { background: #d97706; }
+  .dot-biz { background: #0284c7; }
+  .dot-sci { background: #6d64e8; }
+
+  .bar-track { height: 6px; border-radius: 999px; background: #e2e8f0; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width .4s ease; }
+  .bar-mark { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(100,116,139,0.7); }
+
+  .chart { width: 100%; }
+  .kpi-val { font-size: 32px; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .sect-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; }
+
+  .nso-row td { background: #eff6ff !important; }
+
+  .seg-tab { transition: all .15s ease; }
+  .seg-tab.active { background: #1d4ed8; color: #fff; }
+
+  @media print {
+    .chart { break-inside: avoid; }
+    aside { display: none !important; }
+    body { background: #fff !important; }
+    .card { box-shadow: none !important; border-color: #cbd5e1 !important; }
+    main .card { break-inside: avoid; }
+  }
+
+  /* Спокойная типографика аналитического отчёта */
+  html, body { background:#f5f7fa; color:#263548; }
+  .card { border:1px solid #e1e7ef; border-radius:10px; box-shadow:0 1px 2px rgba(17,39,65,.025); }
+  .card-soft { background:#f8fafd; border:1px solid #edf1f6; border-radius:8px; }
+  .nav-btn { border-radius:7px; }
+  .nav-btn.active { background:#eaf1fa; color:#184d7a; box-shadow:none; font-weight:650; }
+  .nav-btn:hover { background:#f1f5fa; }
+  .sect-label { letter-spacing:.035em; color:#627287; font-size:11px; }
+  .kpi-val { letter-spacing:-.035em; font-weight:680; }
+  .method-details summary::marker { color:#7890a9; }
+  .method-details[open] { border-color:#cdd9e8; }
+  table.dataTable tbody td { font-size:13px !important; }
+  .chart canvas { max-width:100%; }
+  @media (max-width:650px) { .chart { min-height:300px; } }
+
+/* Сдержанное оформление аналитической части */
+.indicator-list {display:flex; flex-direction:column; gap:0; width:100%;}
+.indicator-item {padding:10px 0 11px; border-bottom:1px solid #e7ecf2;}
+.indicator-item:last-child {border-bottom:0;}
+.indicator-head {display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:9px;}
+.indicator-title {font-size:12px; line-height:1.4; color:#334155; min-width:0;}
+.indicator-number {color:#8995a7; font-variant-numeric:tabular-nums;}
+.indicator-score {font-weight:700; color:#1e293b; font-size:13px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+.indicator-foot {display:flex; align-items:center; gap:8px;}
+.indicator-track {height:7px; background:#e9eef3; border-radius:3px; flex:1; overflow:hidden;}
+.indicator-track span {display:block; height:100%;border-radius:3px;}
+.indicator-minmax {background:#fffcf3; margin:0 -10px; padding-left:10px; padding-right:10px; border-left:3px solid #d97706;}
+.mm-tag,.mm-key {display:inline-flex;align-items:center;gap:5px;flex:none;color:#375775;background:#edf4fa;border:1px solid #ccdce9;padding:2px 7px;border-radius:5px;letter-spacing:0;font-size:10px;font-weight:600;white-space:nowrap;}
+.mm-tag::before,.mm-key::before {content:"";width:6px;height:6px;border-radius:50%;background:#5389b5;flex:none;}
+.mm-key {vertical-align:middle;margin-right:4px;}
+.indicator-no-tag {width:64px;flex:none;}
+.score-with-method {display:inline-flex; align-items:center;gap:6px;}
+@media(max-width:1279px){.indicator-title{font-size:13px}.indicator-item{padding-top:12px;padding-bottom:12px}}
+
+/* Компактный обзор показателей: один блок на экране вместо трёх колонок */
+.indicator-block-tabs{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #e4eaf1;padding-bottom:12px}
+.indicator-block-tab{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid #dbe3ec;border-radius:8px;background:white;font-size:13px;color:#475569;cursor:pointer}
+.indicator-block-tab strong{font-size:15px;color:#203550}
+.indicator-block-tab.active{border-color:#7196bb;background:#eff5fb;color:#173d63;font-weight:650}
+.indicator-summary{font-size:12px;color:#64748b;margin:15px 0 8px}
+.indicator-single-list{display:grid;gap:2px}
+.single-indicator{display:grid;grid-template-columns:minmax(220px,1.3fr) minmax(110px,1fr) 56px;gap:16px;align-items:center;padding:10px 8px;border-bottom:1px solid #f0f2f5;font-size:13px}
+.single-indicator-name{display:flex;align-items:center;gap:7px;min-width:0;line-height:1.4}
+.single-indicator-id{color:#8793a5;flex:none}
+.single-indicator-track{height:9px;background:#eef2f6;border-radius:6px;overflow:hidden}
+.single-indicator-track span{display:block;height:100%;border-radius:6px}
+.single-indicator-value{text-align:right;font-variant-numeric:tabular-nums;color:#253347}
+.single-indicator .mm-tag{font-size:10px;flex:none}
+.indicator-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:17px}
+.indicator-more{font-size:13px;font-weight:600;color:#1d4f80;padding:7px 0;cursor:pointer}
+.indicator-more:hover{text-decoration:underline}
+@media(max-width:700px){.single-indicator{grid-template-columns:minmax(0,1fr) 52px;gap:8px}.single-indicator-track{grid-column:1/-1;grid-row:2}.single-indicator-value{grid-column:2;grid-row:1}.single-indicator-name{grid-column:1}.indicator-footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-[1550px] mx-auto p-4 sm:p-6 lg:p-8">
+  <div class="flex flex-col lg:flex-row gap-6">
+
+    <aside class="w-full lg:w-72 flex-shrink-0 space-y-6">
+
+      <div class="card p-5">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="bg-blue-800 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">НСО</span>
+          <span class="text-xs text-blue-800 font-semibold">Рейтинг НТР</span>
+        </div>
+        <h2 class="text-lg font-bold text-slate-800 tracking-tight">Новосибирская область</h2>
+        <p class="text-xs text-slate-500 mt-1">Национальный рейтинг научно-технологического развития · 2024</p><p class="text-[11px] text-slate-500 mt-2">Баллы Min/Max предварительные</p>
+        <p class="text-[10px] text-slate-500 mt-2">Данные на 14.02.2026. Источник официальных блоков: Минобрнауки России</p>
+      </div>
+
+      <nav class="card p-2 space-y-1">
+        <button onclick="switchTab('profile')" id="btn-profile" class="nav-btn active w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          1. Общее положение
+        </button>
+        <button onclick="switchTab('gaps')" id="btn-gaps" class="nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          2. Показатели с низким баллом
+        </button>
+        <button onclick="switchTab('cheap')" id="btn-cheap" class="nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          3. Потенциал улучшения
+        </button>
+        <button onclick="switchTab('details')" id="btn-details" class="nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          4. Все показатели
+        </button>
+        <button onclick="switchTab('dynamics')" id="btn-dynamics" class="nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          5. Динамика
+        </button>
+        <button onclick="switchTab('regions')" id="btn-regions" class="nav-btn w-full text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600">
+          6. Сравнение с лидерами
+        </button>
+      </nav>
+
+      <div class="card p-4 space-y-3">
+        <label class="text-[11px] text-slate-500 font-semibold uppercase tracking-wider block mb-1">Печать</label>
+        <select id="printScope" class="w-full bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2.5 outline-none cursor-pointer mb-2">
+          <option value="current">Текущий раздел</option>
+          <option value="all">Весь отчёт</option>
+        </select>
+        <button onclick="printReport()" class="w-full bg-[#e8edf3] hover:bg-[#d8e0ea] text-slate-700 text-xs font-semibold py-2.5 rounded-xl transition">
+          Печать отчёта
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 min-w-0 space-y-6">
+      <section id="screen-profile" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="card p-5">
+            <p class="sect-label mb-2">Место 2024</p>
+            <div class="flex items-baseline gap-2">
+              <span class="kpi-val text-slate-800">5</span>
+              <span class="text-sm text-slate-500">из 85 регионов</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">5-е место три года подряд</p>
+          </div>
+          <div class="card p-5">
+            <p class="sect-label mb-2">Итоговый балл 2024</p>
+            <div class="flex items-baseline gap-2">
+              <span class="kpi-val text-slate-800">152,37</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Методика 2024 г.</p>
+          </div>
+          <div class="card p-5">
+            <p class="sect-label mb-2">До 4-го места</p>
+            <div class="flex items-baseline gap-2">
+              <span class="kpi-val text-rose-600">0,19</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Нижегородская обл., 152,56</p>
+          </div>
+          <div class="card p-5">
+            <p class="sect-label mb-2">Отрыв от 6-го места</p>
+            <div class="flex items-baseline gap-2">
+              <span class="kpi-val text-emerald-700">1,78</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Томская обл., 150,59</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 card p-6">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+              <div>
+                <h3 class="text-base font-semibold text-slate-800 mb-1">Баллы по блокам</h3>
+                <p class="text-xs text-slate-500">НСО, среднее по РФ и среднее первой пятёрки, 2024</p>
+              </div>
+              <select id="fltProfile" class="bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2 outline-none cursor-pointer sm:w-44">
+                <option value="all">Все блоки</option>
+                <option value="gov">Органы власти</option>
+                <option value="biz">Наукоёмкий бизнес</option>
+                <option value="sci">Исследователи</option>
+              </select>
+            </div>
+            <div id="chart-profile" class="chart" style="height: 280px;"></div>
+          </div>
+          <div class="card p-6 flex flex-col justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800 mb-1">Места НСО по годам</h3>
+              <p class="text-xs text-slate-500 mb-5">Общий зачёт</p>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white border border-[#e8edf3]">
+                  <span class="text-xs text-slate-500">2022</span>
+                  <span class="text-lg font-bold text-slate-600">5-е место</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white border border-[#e8edf3]">
+                  <span class="text-xs text-slate-500">2023</span>
+                  <span class="text-lg font-bold text-slate-600">5-е место</span>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-xl bg-blue-50 border border-blue-200">
+                  <span class="text-xs text-blue-700 font-medium">2024</span>
+                  <span class="text-lg font-bold text-blue-800">5-е место</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h3 class="text-base font-semibold text-slate-800 mb-4">Блоки: баллы и места</h3>
+          <div class="space-y-3" id="block-cards"></div>
+        </div>
+
+        <div class="card p-6" id="indicators-overview">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div><h3 class="text-base font-semibold text-slate-800">Показатели по блокам</h3>
+              <p class="text-xs text-slate-500 mt-1">2024 год</p></div>
+          </div>
+          <p class="text-xs text-slate-500 mb-4"><span class="mm-key">Min/Max</span> показывает оценку относительно минимального и максимального значения по регионам. Баллы пока предварительные.</p>
+          <div class="indicator-block-tabs" role="group" aria-label="Выбор блока">
+            <button type="button" class="indicator-block-tab active" data-ind-block="gov">Органы власти <strong>37,8</strong></button>
+            <button type="button" class="indicator-block-tab" data-ind-block="biz">Наукоёмкий бизнес <strong>64,7</strong></button>
+            <button type="button" class="indicator-block-tab" data-ind-block="sci">Исследователи <strong>49,9</strong></button>
+          </div>
+          <div class="indicator-summary" id="indicator-summary"></div>
+          <div id="indicator-single-list" class="indicator-single-list"></div>
+          <div class="indicator-footer"><button id="indicator-more" type="button" class="indicator-more">Показать все показатели</button><span class="text-xs text-slate-500"></span></div>
+        </div>
+      </section>
+
+      <!-- ЭКРАН 5: ДИНАМИКА, две версии -->
+      <section id="screen-gaps" class="hidden space-y-6">
+        <div class="card p-5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800 mb-1">Отставания</h3>
+              <p class="text-xs text-slate-500">Показатели с баллом ниже 50. Подробности открываются по нажатию на строку.</p>
+            </div>
+            <select id="fltGaps" class="bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2 outline-none cursor-pointer sm:w-44 flex-shrink-0">
+              <option value="all">Все блоки</option>
+              <option value="gov">Органы власти</option>
+              <option value="biz">Наукоёмкий бизнес</option>
+              <option value="sci">Исследователи</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="gaps-summary"></div>
+        <div id="gaps-sections" class="space-y-6"></div>
+      </section>
+
+      <section id="screen-cheap" class="hidden space-y-6">
+        <div class="card p-5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800 mb-1">Потенциал улучшения показателей</h3>
+              <p class="text-xs text-slate-500">Показатели с возможностью улучшения результата. Сначала приведены варианты с меньшей оценкой усилия.</p>
+              <div class="mt-3 text-xs text-slate-600 leading-relaxed max-w-3xl">
+                <p><strong class="text-slate-700">Как оценено усилие.</strong> Для каждого показателя задана ближайшая целевая величина. «Усилие» в процентах показывает условную сложность её достижения, а не бюджет, срок или точный процент изменения самого показателя.</p>
+                <p class="mt-2">Усилие и прирост баллов указаны для сравнения сценариев. Это предварительные оценки, а не прогноз места в рейтинге.</p>
+              </div>
+            </div>
+            <select id="fltCheap" class="bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2 outline-none cursor-pointer sm:w-44 flex-shrink-0">
+              <option value="all">Все блоки</option>
+              <option value="gov">Органы власти</option>
+              <option value="biz">Наукоёмкий бизнес</option>
+              <option value="sci">Исследователи</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="cheap-top"></div>
+
+        <div class="card p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800">Усилие и отдача по показателям</h3>
+              <p class="text-xs text-slate-500">Горизонтальная ось - необходимое изменение показателя, вертикальная - предварительная оценка прироста балла.</p>
+            </div>
+          </div>
+          <div id="chart-cheap" class="chart" style="height: 340px;"></div>
+        </div>
+
+        <div class="card p-6">
+          <div class="mb-4">
+            <h3 class="text-base font-semibold text-slate-800">Приоритеты для анализа</h3>
+            <p class="text-xs text-slate-500">Сценарные оценки, не прогноз изменения официального рейтинга</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[11px] uppercase tracking-wider text-slate-500 border-b border-[#e2e8f0]">
+                  <th class="pb-3 pr-4">Показатель</th>
+                  <th class="pb-3 pr-4 text-center">Сейчас</th>
+                  <th class="pb-3 pr-4 text-center">Цель</th>
+                  <th class="pb-3 pr-4 w-40">Прогресс к порогу</th>
+                  <th class="pb-3 pr-4 text-center">Усилие</th>
+                  <th class="pb-3 pr-4 text-center">+ балл блоку</th>
+                  <th class="pb-3 pr-4 text-center">+ балл итогу</th>
+                  <th class="pb-3 pr-4">Ответственный</th>
+                  <th class="pb-3">Отрасль</th>
+                </tr>
+              </thead>
+              <tbody id="cheap-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-details" class="hidden space-y-6">
+        <div class="card p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800">Все показатели</h3>
+              <p class="text-xs text-slate-500 mt-0.5">40 показателей. Нажатие на строку показывает данные по годам</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button data-df="all" class="detail-tab active px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-800 text-white">Все</button>
+              <button data-df="gaps" class="detail-tab px-3 py-1.5 rounded-lg text-xs font-medium bg-[#e8edf3] text-slate-600">Ниже порога</button>
+              <button data-df="comparable" class="detail-tab px-3 py-1.5 rounded-lg text-xs font-medium bg-[#e8edf3] text-slate-600">Сопоставимые</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+            <select id="detBlock" class="bg-white border border-[#e8edf3] text-slate-700 text-xs rounded-lg px-3 py-2.5">
+              <option value="">Все блоки</option>
+              <option value="gov">Органы власти</option>
+              <option value="biz">Наукоёмкий бизнес</option>
+              <option value="sci">Исследователи</option>
+            </select>
+            <select id="detMinistry" class="bg-white border border-[#e8edf3] text-slate-700 text-xs rounded-lg px-3 py-2.5">
+              <option value="">Все министерства</option>
+            </select>
+            <select id="detRange" class="bg-white border border-[#e8edf3] text-slate-700 text-xs rounded-lg px-3 py-2.5">
+              <option value="">Любой балл</option>
+              <option value="0-49">0-49, ниже порога</option>
+              <option value="50-74">50-74 балла</option>
+              <option value="75-100">75-100 баллов</option>
+            </select>
+          </div>
+
+          <table id="details-table" class="w-full display">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Показатель</th>
+                <th>Блок</th>
+                <th class="text-center">Значение 2024</th>
+                <th class="text-center">Балл 2024</th>
+                <th>Ответственный</th>
+                <th class="text-center">Год</th>
+                <th class="text-center"></th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </section>
+
+      <section id="screen-dynamics" class="hidden space-y-6">
+
+        <!-- Переключатель версий -->
+        <div class="card p-5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div>
+              <h3 class="text-base font-semibold text-slate-800 mb-1">Динамика сопоставимых показателей</h3>
+              <p class="text-xs text-slate-500">Изменение за 2024 год по сравнению с 2023 годом. Для сравнения также показан 2022 год.</p>
+            </div>
+            <div class="flex gap-1 bg-[#eef2f7] p-1 rounded-xl flex-shrink-0">
+              <button data-dyn="summary" class="seg-tab dyn-tab active px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600">Сводка</button>
+              <button data-dyn="single" class="seg-tab dyn-tab px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600">Один показатель</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Версия 1: сводка по всем сопоставимым -->
+        <div id="dyn-summary" class="space-y-6">
+          <div class="card p-6">
+            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-1">
+              <h3 class="text-base font-semibold text-slate-800">Баллы сопоставимых показателей: 2022–2024</h3>
+              <p class="text-[11px] text-slate-500">Изменение за 2024 год к 2023 году.</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4" id="spark-grid"></div>
+          </div>
+        </div>
+
+        <!-- Версия 2: один показатель -->
+        <div id="dyn-single" class="hidden space-y-6">
+          <div class="card p-6">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-5">
+              <div class="min-w-0">
+                <h3 class="text-base font-semibold text-slate-800 mb-1">Динамика одного показателя</h3>
+                <p class="text-xs text-slate-500">Значение показателя и расчётный балл за каждый год.</p>
+              </div>
+              <div class="flex flex-col sm:flex-row gap-2 flex-shrink-0">
+                <select id="dynBlock" class="bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2 outline-none cursor-pointer">
+                  <option value="all">Все блоки</option>
+                  <option value="gov">Органы власти</option>
+                  <option value="biz">Наукоёмкий бизнес</option>
+                  <option value="sci">Исследователи</option>
+                </select>
+                <select id="dynIndicator" class="bg-white text-slate-700 text-xs border border-[#e8edf3] rounded-lg px-3 py-2 outline-none cursor-pointer sm:w-72"></select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div class="lg:col-span-2">
+                <div id="chart-dyn-line" class="chart" style="height: 320px;"></div>
+              </div>
+              <div class="space-y-3">
+                <div class="card-soft p-4">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span id="dyn-block-dot" class="dot dot-gov"></span>
+                    <span id="dyn-block-label" class="text-[10px] uppercase font-semibold text-slate-500"></span>
+                  </div>
+                  <p id="dyn-name" class="text-sm font-semibold text-slate-800 leading-snug mb-1"></p>
+                  <p id="dyn-ministry" class="text-[11px] text-slate-500"></p>
+                  <p id="dyn-source" class="text-[11px] text-slate-500 mt-1"></p>
+                </div>
+                <div class="card-soft p-4">
+                  <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">Изменение</p>
+                  <div class="space-y-2 text-xs">
+                    <div class="flex justify-between"><span class="text-slate-500">Балл, 2024 к 2023</span><span id="dyn-d1" class="font-semibold"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Балл, 2024 к 2022</span><span id="dyn-d2" class="font-semibold"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-500">Значение 2024</span><span id="dyn-v24" class="font-semibold text-slate-700"></span></div>
+                  </div>
+                </div>
+                <div class="card-soft p-4">
+                  <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-2">По годам</p>
+                  <table class="w-full text-xs">
+                    <tbody id="dyn-table"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section id="screen-regions" class="hidden space-y-6">
+        <div class="card p-5">
+          <h3 class="text-base font-semibold text-slate-800 mb-1">Сравнение с лидерами</h3>
+          <p class="text-xs text-slate-500">Первые 15 мест рейтинга 2024 г.: отрывы, сравнение по блокам, изменение мест за год.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="card p-5">
+            <p class="sect-label mb-2">До 1-го места</p>
+            <p class="kpi-val text-slate-800">30,73</p>
+            <p class="text-xs text-slate-500 mt-2">Москва, 183,10</p>
+          </div>
+          <div class="card p-5">
+            <p class="sect-label mb-2">До 4-го места</p>
+            <p class="kpi-val text-rose-600">0,19</p>
+            <p class="text-xs text-slate-500 mt-2">Нижегородская обл., 152,56</p>
+          </div>
+          <div class="card p-5">
+            <p class="sect-label mb-2">Отрыв от 6-го места</p>
+            <p class="kpi-val text-emerald-700">1,78</p>
+            <p class="text-xs text-slate-500 mt-2">Томская обл., 150,59</p>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h4 class="text-sm font-semibold text-slate-800 mb-1">15 регионов-лидеров</h4>
+          <p class="text-xs text-slate-500 mb-4">Шкала от нуля. В скобках показана разница с НСО.</p>
+          <div id="chart-ladder" class="chart" style="height: 440px;"></div>
+        </div>
+
+        <div class="card p-6">
+          <h4 class="text-sm font-semibold text-slate-800 mb-4">Сравнение с первой пятёркой по блокам</h4>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div>
+              <div class="flex items-center gap-2 mb-2"><span class="dot dot-gov"></span><p class="text-xs font-semibold text-amber-600 uppercase">Органы власти</p></div>
+              <p class="text-[10px] text-slate-500 mb-2">7-е место по блоку</p>
+              <div id="chart-compare-gov" class="chart" style="height: 240px;"></div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-2"><span class="dot dot-biz"></span><p class="text-xs font-semibold text-blue-600 uppercase">Наукоёмкий бизнес</p></div>
+              <p class="text-[10px] text-slate-500 mb-2">4-е место по блоку</p>
+              <div id="chart-compare-biz" class="chart" style="height: 240px;"></div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-2"><span class="dot dot-sci"></span><p class="text-xs font-semibold text-indigo-600 uppercase">Исследователи</p></div>
+              <p class="text-[10px] text-slate-500 mb-2">16-е место по блоку</p>
+              <div id="chart-compare-sci" class="chart" style="height: 240px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <h4 class="text-sm font-semibold text-slate-800 mb-4">Сводная таблица, 15 регионов</h4>
+          <table id="top15-table" class="w-full display">
+            <thead>
+              <tr>
+                <th>Место 2024</th>
+                <th>Регион</th>
+                <th class="text-center">Органы власти</th>
+                <th class="text-center">Бизнес</th>
+                <th class="text-center">Исследователи</th>
+                <th class="text-right">Итог 2024</th>
+                <th class="text-center">2023</th>
+              </tr>
+            </thead>
+          </table>
+          <p class="text-[11px] text-slate-500 mt-3">Условные цвета: от 75 баллов, от 50 баллов, ниже 50 баллов.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+const THRESHOLDS = { green: 75, yellow: 50 };
+const BLOCKS = {
+  gov: { label: 'Органы власти', short: 'Органы власти', color: '#d97706' },
+  biz: { label: 'Наукоёмкий бизнес', short: 'Бизнес', color: '#0284c7' },
+  sci: { label: 'Исследователи', short: 'Исследователи', color: '#6366f1' }
+};
+
+const INDICATORS = [
+  { n:1,  block:'gov', name:'Программа НТР', v22:'да', b22:100, v23:'да', b23:100, v24:'да', b24:100, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:2,  block:'gov', name:'Должностное лицо', v22:null, b22:null, v23:'да', b23:100, v24:'да', b24:100, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:false, target:null },
+  { n:3,  block:'gov', name:'План Десятилетия', v22:null, b22:null, v23:'да', b23:100, v24:'да', b24:100, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:false, target:null },
+  { n:4,  block:'gov', name:'Работники НИР в занятых', v22:'1,3%', b22:28.8, v23:'1,3%', b23:25.8, v24:'1,3%', b24:34.2, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:18, gainBlock:12.5, gainTotal:4.2, comparable:true, target:'1,55%' },
+  { n:5,  block:'gov', name:'Затраты НИОКР к ВРП', v22:'1,7%', b22:75, v23:'1,7%', b23:75, v24:'1,7%', b24:75, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:6,  block:'gov', name:'Бюджет субъекта на науку', v22:'0,14%', b22:50, v23:'0,14%', b23:50, v24:'0,14%', b24:50, ministry:'Минфин НСО', source:'Минфин', year:2024, status:'открыт', effort:22, gainBlock:14.0, gainTotal:4.7, comparable:true, target:'0,18%' },
+  { n:7,  block:'gov', name:'Доля участников ВсОШ', v22:null, b22:null, v23:'18%', b23:25.8, v24:'18%', b24:29.4, ministry:'Минобр НСО', source:'Минпросвещения', year:2024, status:'открыт', effort:15, gainBlock:10.0, gainTotal:3.3, comparable:false, target:'21%' },
+  { n:8,  block:'gov', name:'Доля вовлечённых в НТТ', v22:null, b22:null, v23:'9%', b23:25.8, v24:'9%', b24:29.4, ministry:'Минобр НСО', source:'Минпросвещения', year:2024, status:'по запросу', effort:12, gainBlock:8.5, gainTotal:2.8, comparable:false, target:'10,1%' },
+  { n:9,  block:'gov', name:'Кандидаты наук относительно среднего по округу', v22:null, b22:null, v23:'115%', b23:25.8, v24:'115%', b24:28.4, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:10, gainBlock:7.2, gainTotal:2.4, comparable:false, target:'125%' },
+  { n:10, block:'gov', name:'Доктора наук относительно среднего по округу', v22:null, b22:null, v23:'130%', b23:25.8, v24:'130%', b24:26.4, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:8, gainBlock:6.0, gainTotal:2.0, comparable:false, target:'140%' },
+  { n:11, block:'gov', name:'Вузы в «Трёх миссиях»', v22:null, b22:null, v23:'5 вузов', b23:75, v24:'5 вузов', b24:75, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:false, target:null },
+  { n:12, block:'gov', name:'Доля отечественных технологий', v22:null, b22:null, v23:null, b23:null, v24:'62%', b24:28.4, ministry:'Минпромторг НСО', source:'Минпромторг', year:2024, status:'по запросу', effort:14, gainBlock:9.1, gainTotal:3.0, comparable:false, target:'70%' },
+  { n:13, block:'gov', name:'Индекс высокотехнологичного производства', v22:'104%', b22:28.8, v23:'104%', b23:25.8, v24:'104%', b24:31.4, ministry:'Минпромторг НСО', source:'Росстат', year:2024, status:'открыт', effort:9, gainBlock:5.5, gainTotal:1.8, comparable:true, target:'110%' },
+  { n:14, block:'gov', name:'Технологические инновации', v22:'19%', b22:28.8, v23:'19%', b23:26.0, v24:'19%', b24:34.4, ministry:'Минпромторг НСО', source:'Росстат', year:2024, status:'открыт', effort:11, gainBlock:7.5, gainTotal:2.5, comparable:true, target:'22%' },
+  { n:15, block:'gov', name:'Инновационные товары', v22:'8,1%', b22:75, v23:'5,6%', b23:50, v24:'5,6%', b24:50, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'открыт', effort:20, gainBlock:15.0, gainTotal:5.0, comparable:true, target:'6,5%' },
+  { n:16, block:'biz', name:'Исследователи до 29 лет', v22:'16,5%', b22:75, v23:'16,5%', b23:75, v24:'16,5%', b24:75, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:17, block:'biz', name:'Темп роста доли до 29', v22:null, b22:null, v23:'+2%', b23:55.6, v24:'+2%', b24:50, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:9, gainBlock:6.0, gainTotal:2.0, comparable:false, target:'+2,5%' },
+  { n:18, block:'biz', name:'Финансирование проектов', v22:null, b22:null, v23:'420 тыс.', b23:55.6, v24:'420 тыс. руб./чел.', b24:100, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'по запросу', effort:12, gainBlock:8.0, gainTotal:2.7, comparable:false, target:'480 тыс. руб./чел.' },
+  { n:19, block:'biz', name:'Студенты технических направлений', v22:null, b22:null, v23:null, b23:null, v24:'1,5%', b24:50, ministry:'Минобр НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:11, gainBlock:8.0, gainTotal:2.7, comparable:false, target:'1,7%' },
+  { n:20, block:'biz', name:'Выпускники ИКТ', v22:'0,020%', b22:75, v23:'0,012%', b23:50, v24:'0,020%', b24:75, ministry:'Минобр НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:21, block:'biz', name:'Внебюджетные инвестиции', v22:null, b22:null, v23:null, b23:null, v24:'55%', b24:49.8, ministry:'Минэк НСО', source:'Минэк', year:2024, status:'по запросу', effort:8, gainBlock:5.0, gainTotal:1.7, comparable:false, target:'60%' },
+  { n:22, block:'biz', name:'Участники механизмов внедрения', v22:null, b22:null, v23:null, b23:null, v24:'640', b24:49.8, ministry:'Минпромторг НСО', source:'Минпромторг', year:2024, status:'открыт', effort:10, gainBlock:6.5, gainTotal:2.2, comparable:false, target:'700' },
+  { n:23, block:'biz', name:'Пользователи инфраструктуры внедрения', v22:null, b22:null, v23:null, b23:null, v24:'185 ед.', b24:91.6, ministry:'Минэк НСО', source:'Минобрнауки / Минпромторг', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:false, target:null },
+  { n:24, block:'biz', name:'Бюджеты субъектов в инновациях', v22:'7%', b22:75, v23:'7%', b23:75, v24:'3%', b24:50, ministry:'Минфин НСО', source:'Минфин', year:2024, status:'открыт', effort:7, gainBlock:4.5, gainTotal:1.5, comparable:true, target:'3,5%' },
+  { n:25, block:'biz', name:'Инновационная активность', v22:'7,5%', b22:75, v23:'3,5%', b23:50, v24:'7,5%', b24:75, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:26, block:'biz', name:'Доля используемых ОИС', v22:'2,5%', b22:75, v23:'2,5%', b23:75, v24:'0,6%', b24:50, ministry:'Минобрнауки НСО', source:'Роспатент', year:2024, status:'открыт', effort:5, gainBlock:3.2, gainTotal:1.1, comparable:true, target:'0,8%' },
+  { n:27, block:'biz', name:'Высокотехнологичные отрасли в ВРП', v22:'4,2%', b22:82.0, v23:'4,2%', b23:55.6, v24:'4,2%', b24:49.9, ministry:'Минпромторг НСО', source:'Росстат', year:2024, status:'открыт', effort:16, gainBlock:11.0, gainTotal:3.7, comparable:true, target:'5,0%' },
+  { n:28, block:'biz', name:'Отношение экспорта к импорту технологий', v22:'3,0%', b22:75, v23:'0,7%', b23:50, v24:'3,0%', b24:75, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:29, block:'sci', name:'Соцподдержка исследователей', v22:'да', b22:100, v23:'да', b23:100, v24:'да', b24:100, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:30, block:'sci', name:'Публикации РИНЦ на 10 НПР', v22:null, b22:null, v23:'3 000 на 10 работников', b23:75, v24:'1 500 на 10 работников', b24:46.5, ministry:'Минобрнауки НСО', source:'РИНЦ', year:2024, status:'открыт', effort:16, gainBlock:11.2, gainTotal:3.7, comparable:false, target:'1800' },
+  { n:31, block:'sci', name:'Зарплата научных сотрудников', v22:null, b22:null, v23:'140%', b23:50, v24:'140%', b24:46.6, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:13, gainBlock:9.8, gainTotal:3.3, comparable:false, target:'150%' },
+  { n:32, block:'sci', name:'Инфраструктура на 10 исследователей', v22:'0,24', b22:75, v23:'0,24', b23:75, v24:'0,24 ед. на 10 исследователей', b24:75, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:33, block:'sci', name:'Средства бизнеса в затратах на НИОКР', v22:'14%', b22:50, v23:'14%', b23:50, v24:'14%', b24:50, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'открыт', effort:22, gainBlock:14.0, gainTotal:4.7, comparable:true, target:'17%' },
+  { n:34, block:'sci', name:'Темп роста финансирования со стороны бизнеса', v22:null, b22:null, v23:'+6%', b23:4.3, v24:'+6%', b24:4.5, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'открыт', effort:35, gainBlock:22.0, gainTotal:7.3, comparable:false, target:'+8%' },
+  { n:35, block:'sci', name:'Средства институтов развития к ВРП', v22:'0,14%', b22:54.4, v23:'0,14%', b23:4.3, v24:'0,14%', b24:100, ministry:'Минэк НСО', source:'Росстат', year:2024, status:'ожидает данных', effort:35, gainBlock:22.0, gainTotal:7.3, comparable:true, target:'0,25%' },
+  { n:36, block:'sci', name:'Машины и оборудование на исследователя', v22:'2800', b22:75, v23:'2800', b23:75, v24:'2800 тыс. руб.', b24:75, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:null, gainBlock:null, gainTotal:null, comparable:true, target:null },
+  { n:37, block:'sci', name:'Темп роста стоимости машин и оборудования', v22:'106%', b22:50, v23:'106%', b23:50, v24:'106%', b24:50, ministry:'Минобрнауки НСО', source:'Росстат', year:2024, status:'открыт', effort:25, gainBlock:16.0, gainTotal:5.3, comparable:true, target:'112%' },
+  { n:38, block:'sci', name:'Патентные заявки на 10 тыс. занятых', v22:null, b22:null, v23:null, b23:null, v24:'700 на 10 тыс. занятых', b24:71.6, ministry:'Минобрнауки НСО', source:'Роспатент', year:2024, status:'по запросу', effort:null, gainBlock:null, gainTotal:null, comparable:false, target:null },
+  { n:39, block:'sci', name:'Молодые руководители до 50', v22:null, b22:null, v23:'48%', b23:4.4, v24:'48%', b24:4.6, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'закрыт', effort:28, gainBlock:17.5, gainTotal:5.8, comparable:false, target:'60%' },
+  { n:40, block:'sci', name:'Публикации «Белого списка»', v22:null, b22:null, v23:null, b23:null, v24:'1500', b24:50, ministry:'Минобрнауки НСО', source:'Минобрнауки', year:2024, status:'по запросу', effort:19, gainBlock:13.4, gainTotal:4.5, comparable:false, target:'1800' }
+];
+
+// Значения баллов показателей являются модельными, в том числе для метода Min/Max.
+// Сопоставимость исходных показателей (comparable) сохранена из исходного макета.
+const SCORE_STATUS = 'Модель';
+const MINMAX_INDICATORS = new Set([4,7,8,9,10,12,13,14,17,21,22,23,27,30,31,34,38,39]);
+const BR_INDICATORS = new Set([5,6,11,15,16,18,19,20,24,25,26,28,32,33,35,36,37,40]);
+const BINARY_INDICATORS = new Set([1,2,3,29]);
+const scoringMethod = i => BINARY_INDICATORS.has(i.n) ? 'да/нет' : MINMAX_INDICATORS.has(i.n) ? 'Min/Max' : 'Шкала';
+const methodTag = i => MINMAX_INDICATORS.has(i.n)
+  ? '<span class="mm-tag" title="Предварительный балл по минимуму и максимуму среди регионов">Min/Max</span>'
+  : BINARY_INDICATORS.has(i.n)
+    ? '<span class="mm-tag" title="Показатель да/нет">да/нет</span>' : '';
+const scoreBadge = i => `<span class="score-with-method">${ballChip(i.b24)}${methodTag(i)}</span>`;
+const blockMeans = () => Object.fromEntries(Object.keys(BLOCKS).map(k => {
+  const items = INDICATORS.filter(i => i.block === k && Number.isFinite(i.b24));
+  const sum = items.reduce((acc,i) => acc + i.b24 * (BINARY_INDICATORS.has(i.n) ? .25 : 1), 0);
+  return [k, {count:items.length, sum, mean: sum/items.length}];
+}));
+const OFFICIAL_BLOCKS = { gov:37.8, biz:64.7, sci:49.9 };
+// Служебная проверка без вывода формул на главную страницу.
+function scoreAuditData(){
+ const means=blockMeans();
+ return Object.fromEntries(Object.keys(OFFICIAL_BLOCKS).map(k=>[k,{...means[k],official:OFFICIAL_BLOCKS[k],difference:means[k].mean-OFFICIAL_BLOCKS[k]}]));
+}
+
+const INDUSTRY = {
+  1:'Госуправление', 2:'Госуправление', 3:'Госуправление', 4:'Наука', 5:'Наука',
+  6:'Финансы', 7:'Образование', 8:'Образование', 9:'Наука', 10:'Наука',
+  11:'Образование', 12:'Промышленность', 13:'Промышленность', 14:'Промышленность', 15:'Экономика',
+  16:'Наука', 17:'Наука', 18:'Наука', 19:'Образование', 20:'Образование',
+  21:'Экономика', 22:'Промышленность', 23:'Экономика', 24:'Финансы', 25:'Экономика',
+  26:'Наука', 27:'Промышленность', 28:'Экономика', 29:'Наука', 30:'Наука',
+  31:'Наука', 32:'Наука', 33:'Наука', 34:'Экономика', 35:'Экономика',
+  36:'Наука', 37:'Наука', 38:'Наука', 39:'Наука', 40:'Наука'
+};
+
+const BLOCK_RANKS = [
+  { key:'gov', name:'Органы власти', score:37.8, r22:11, r23:6, r24:7 },
+  { key:'biz', name:'Наукоёмкий бизнес', score:64.7, r22:5, r23:5, r24:4 },
+  { key:'sci', name:'Исследователи', score:49.9, r22:5, r23:7, r24:16 }
+];
+
+const PROFILE = {
+  nso: { gov:37.8, biz:64.7, sci:49.9 },
+  rf: { gov:26.5, biz:44.1, sci:38.2 },
+  top5: { gov:48.5, biz:64.9, sci:55.3 }
+};
+
+const TOP15 = [
+  { r24:1, name:'Москва', gov:53.1, biz:73.5, sci:56.5, score:183.10, r23a:1, r23b:1 },
+  { r24:2, name:'Санкт-Петербург', gov:48.5, biz:67.6, sci:57.1, score:173.22, r23a:2, r23b:2 },
+  { r24:3, name:'Республика Татарстан', gov:42.8, biz:61.3, sci:53.3, score:157.41, r23a:3, r23b:3 },
+  { r24:4, name:'Нижегородская область', gov:42.5, biz:61.5, sci:48.6, score:152.56, r23a:6, r23b:6 },
+  { r24:5, name:'Новосибирская область', gov:37.8, biz:64.7, sci:49.9, score:152.37, r23a:5, r23b:5 },
+  { r24:6, name:'Томская область', gov:33.9, biz:61.4, sci:55.3, score:150.59, r23a:4, r23b:4 },
+  { r24:7, name:'Республика Башкортостан', gov:35.5, biz:59.6, sci:51.5, score:146.61, r23a:8, r23b:8 },
+  { r24:8, name:'Свердловская область', gov:32.3, biz:59.8, sci:52.7, score:144.79, r23a:9, r23b:9 },
+  { r24:9, name:'Московская область', gov:41.0, biz:47.9, sci:54.0, score:142.78, r23a:7, r23b:7 },
+  { r24:10, name:'Самарская область', gov:38.7, biz:57.3, sci:40.7, score:136.69, r23a:10, r23b:10 },
+  { r24:11, name:'Ростовская область', gov:34.5, biz:48.5, sci:52.8, score:135.81, r23a:17, r23b:17 },
+  { r24:12, name:'Омская область', gov:24.1, biz:53.8, sci:52.2, score:129.97, r23a:19, r23b:19 },
+  { r24:13, name:'Тюменская область', gov:32.1, biz:64.9, sci:32.3, score:129.24, r23a:12, r23b:12 },
+  { r24:14, name:'Воронежская область', gov:27.2, biz:51.4, sci:47.6, score:126.20, r23a:21, r23b:21 },
+  { r24:15, name:'Пермский край', gov:29.7, biz:52.9, sci:43.6, score:126.12, r23a:13, r23b:13 }
+];
+
+const NSO_NAME = 'Новосибирская область';
+const NSO_SCORE = 152.37;
+const charts = [];
+
+const plural = (n, f) => { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return f[2]; if (b > 1 && b < 5) return f[1]; if (b === 1) return f[0]; return f[2]; };
+const fmt1 = x => (x===null||x===undefined||isNaN(x)) ? 'н/д' : Number(x).toFixed(1).replace('.', ',');
+const fmt2 = x => (x===null||x===undefined||isNaN(x)) ? 'н/д' : Number(x).toFixed(2).replace('.', ',');
+
+function ballChip(b){
+  if (b===null||b===undefined) return '<span class="chip chip-gray">н/д</span>';
+  let cls = 'chip-red';
+  if (b >= THRESHOLDS.green) cls = 'chip-green';
+  else if (b >= THRESHOLDS.yellow) cls = 'chip-yellow';
+  return `<span class="chip ${cls}">${fmt1(b)}</span>`;
+}
+function ballChipBlock(b){
+  if (b===null||b===undefined) return '<span class="chip chip-gray">н/д</span>';
+  let cls = 'chip-red';
+  if (b >= 60) cls = 'chip-green';
+  else if (b >= 40) cls = 'chip-yellow';
+  return `<span class="chip ${cls}">${fmt1(b)}</span>`;
+}
+function blockCell(k){ return `<span class="dot dot-${k}"></span>${BLOCKS[k].short}`; }
+function barColor(b){
+  if (b>=THRESHOLDS.green) return '#10b981';
+  if (b>=THRESHOLDS.yellow) return '#f59e0b';
+  return '#f43f5e';
+}
+
+function makeChart(id, option){
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const existing = echarts.getInstanceByDom(el);
+  const c = existing || echarts.init(el, null, { renderer: 'canvas' });
+  c.setOption(option, true);
+  if (!existing) charts.push(c);
+  return c;
+}
+window.addEventListener('resize', () => charts.forEach(c => c.resize()));
+
+const TT = {
+  backgroundColor: '#ffffff', borderColor: '#e8edf3', borderWidth: 1,
+  textStyle: { color: '#1e293b', fontSize: 12 },
+  extraCssText: 'box-shadow: 0 10px 25px -5px rgba(0,0,0,.5); border-radius: 8px; padding: 10px 14px;'
+};
+
+const TABS = ['profile','gaps','cheap','details','dynamics','regions'];
+function switchTab(tabId){
+  TABS.forEach(t => {
+    document.getElementById(`screen-${t}`).classList.toggle('hidden', t!==tabId);
+    document.getElementById(`btn-${t}`).classList.toggle('active', t===tabId);
+  });
+  if (('#'+tabId) !== location.hash) history.replaceState(null, '', '#'+tabId);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => charts.forEach(c => c.resize()), 80);
+}
+window.addEventListener('hashchange', () => {
+  const h = location.hash.replace('#','');
+  if (TABS.includes(h)) switchTab(h);
+});
+
+const BLOCK_ORDER = ['sci','biz','gov'];
+function renderProfile(f='all'){
+  const top5avg = { gov:0, biz:0, sci:0 };
+  TOP15.slice(0,5).forEach(d => { top5avg.gov += d.gov; top5avg.biz += d.biz; top5avg.sci += d.sci; });
+  Object.keys(top5avg).forEach(k => top5avg[k] = top5avg[k] / 5);
+  const keys = BLOCK_ORDER.filter(k => f==='all' || k===f);
+  const barW = keys.length === 1 ? 22 : 14;
+  makeChart('chart-profile', {
+    backgroundColor: 'transparent',
+    tooltip: { ...TT, trigger:'axis', axisPointer:{ type:'shadow', shadowStyle:{ color:'rgba(15,23,42,.04)' } } },
+    legend: { top: 0, right: 10, icon: 'roundRect', itemWidth: 10, itemHeight: 10, textStyle: { color:'#64748b', fontSize: 11 } },
+    grid: { left: 10, right: 60, top: 40, bottom: 10, containLabel: true },
+    xAxis: { type:'value', max: 100, splitLine:{ lineStyle:{ color:'#e2e8f0' } }, axisLabel:{ color:'#64748b', fontSize: 10 }, axisLine:{ show:false } },
+    yAxis: { type:'category', data: keys.map(k => BLOCKS[k].label), axisLine:{ show:false }, axisTick:{ show:false }, axisLabel:{ color:'#334155', fontSize: 12, fontWeight: 500 } },
+    series: [
+      { name:'НСО', type:'bar', barWidth: barW, itemStyle:{ color:'#2563eb', borderRadius:[0,4,4,0] }, label:{ show:true, position:'right', color:'#2563eb', fontSize: 11, fontWeight: 700, formatter: p => fmt1(p.value) }, data: keys.map(k => PROFILE.nso[k]) },
+      { name:'Среднее по РФ', type:'bar', barWidth: barW, itemStyle:{ color:'#475569', borderRadius:[0,4,4,0] }, label:{ show:true, position:'right', color:'#64748b', fontSize: 10, formatter: p => fmt1(p.value) }, data: keys.map(k => PROFILE.rf[k]) },
+      { name:'Среднее по пяти лидерам', type:'bar', barWidth: barW, itemStyle:{ color:'#059669', borderRadius:[0,4,4,0] }, label:{ show:true, position:'right', color:'#047857', fontSize: 10, formatter: p => fmt1(p.value) }, data: keys.map(k => +top5avg[k].toFixed(1)) }
+    ]
+  });
+
+  document.getElementById('block-cards').innerHTML = BLOCK_RANKS.filter(b => f==='all' || b.key===f).map(b => {
+    const trendColor = b.r24 < b.r23 ? 'text-emerald-600' : b.r24 > b.r23 ? 'text-rose-600' : 'text-slate-500';
+    const color = b.score >= 75 ? '#10b981' : b.score >= 50 ? '#f59e0b' : '#f43f5e';
+    return `<div class="card-soft p-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="dot dot-${b.key}"></span>
+        <div>
+          <p class="text-sm font-semibold text-slate-800">${b.name}</p>
+          <p class="text-xs text-slate-500">Место 2024: <b class="text-slate-700">${b.r24}</b> (2023: ${b.r23}, 2022: ${b.r22})</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="w-36 hidden sm:block">
+          <div class="bar-track"><div class="bar-fill" style="width:${b.score}%; background:${color}"></div></div>
+          <p class="text-[10px] text-slate-500 mt-1 text-right">${fmt1(b.score)} баллов</p>
+        </div>
+        <div class="w-20 text-right flex-shrink-0">
+          <p class="text-[10px] text-slate-500 leading-tight">мест за год</p>
+          <p class="text-lg font-bold ${trendColor}">${b.r23 - b.r24 > 0 ? '+' : ''}${b.r23 - b.r24}</p>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  renderSparkGrid();
+  renderIndicatorList();
+}
+
+/* Сводка динамики: дельта теперь к предыдущему году (2024 к 2023) */
+function renderSparkGrid(){
+  const comp = INDICATORS.filter(i => i.comparable && i.b22!=null && i.b23!=null && i.b24!=null);
+  document.getElementById('spark-grid').innerHTML = comp.map(i => {
+    const vals = [i.b22, i.b23, i.b24];
+    const W = 130, H = 96, base = H - 16;
+    const bw = 26, gap = 9;
+    const colors = ['#94a3b8', '#64748b', '#2563eb'];
+    const bars = vals.map((v, idx) => {
+      const bh = Math.max(2, (v / 100) * (H - 30));
+      const x = 12 + idx * (bw + gap);
+      return `<rect x="${x}" y="${base - bh}" width="${bw}" height="${bh}" rx="2" fill="${colors[idx]}"/>
+              <text x="${x + bw/2}" y="${base - bh - 3}" text-anchor="middle" font-size="10" font-weight="700" fill="#1e293b">${fmt1(v)}</text>
+              <text x="${x + bw/2}" y="${H - 3}" text-anchor="middle" font-size="10" fill="#94a3b8">20${22 + idx}</text>`;
+    }).join('');
+    // Дельта между текущим (2024) и предпоследним (2023) годом
+    const delta = i.b24 - i.b23;
+    const dColor = delta > 0 ? '#059669' : delta < 0 ? '#be123c' : '#64748b';
+    const dSign = delta > 0 ? '+' : '';
+    return `<div class="card-soft p-3">
+      <p class="text-[11px] font-medium text-slate-700 leading-snug min-h-[36px]">${i.name} </p>
+      <svg viewBox="0 0 ${W} ${H}" class="w-full mt-1" style="height:${H}px">${bars}</svg>
+      <div class="flex items-center justify-between mt-1">
+        <span class="text-[10px] text-slate-500">${i.source}</span>
+        <span class="text-[11px] font-semibold" style="color:${dColor}">${dSign}${fmt1(delta)} к 2023 г.</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let indicatorBlock = 'gov';
+let indicatorShowAll = false;
+function renderIndicatorList(){
+  document.querySelectorAll('[data-ind-block]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.indBlock === indicatorBlock);
+    if (!btn.dataset.bound) {
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', () => { indicatorBlock = btn.dataset.indBlock; indicatorShowAll = false; renderIndicatorList(); });
+    }
+  });
+  const items = INDICATORS.filter(i => i.block === indicatorBlock).slice().sort((a,b) => a.b24 - b.b24 || a.n - b.n);
+  const selected = indicatorShowAll ? items : items.slice(0,6);
+  const color = BLOCKS[indicatorBlock].color;
+  document.getElementById('indicator-summary').textContent = indicatorShowAll ? `Все ${items.length} показателей блока` : `Показано 6 из ${items.length} с наименьшими баллами`;
+  document.getElementById('indicator-single-list').innerHTML = selected.map(i => {
+    const score = Math.max(0,Math.min(100,Number(i.b24)||0));
+    const value = i.v24 == null ? 'Нет данных' : i.v24;
+    return `<div class="single-indicator" title="Значение показателя: ${value}">
+      <div class="single-indicator-name"><span class="single-indicator-id">${i.n}.</span><span>${i.name}</span>${methodTag(i)}</div>
+      <div class="single-indicator-track"><span style="width:${score}%;background:${color}"></span></div>
+      <strong class="single-indicator-value">${fmt1(i.b24)}</strong>
+    </div>`;
+  }).join('');
+  const more = document.getElementById('indicator-more');
+  more.textContent = indicatorShowAll ? 'Свернуть' : `Все ${items.length} показателей`;
+  if (!more.dataset.bound) {
+    more.dataset.bound = '1';
+    more.addEventListener('click', () => { indicatorShowAll = !indicatorShowAll; renderIndicatorList(); });
+  }
+}
+
+/* ================= ЭКРАН 5: ДИНАМИКА ================= */
+let dynCurrentTab = 'summary';
+let dynCurrentIndicator = null;
+
+function initDynamics(){
+  // Табы версий
+  document.querySelectorAll('.dyn-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.dyn;
+      dynCurrentTab = v;
+      document.querySelectorAll('.dyn-tab').forEach(b => b.classList.toggle('active', b === btn));
+      document.getElementById('dyn-summary').classList.toggle('hidden', v !== 'summary');
+      document.getElementById('dyn-single').classList.toggle('hidden', v !== 'single');
+      if (v === 'single' && !dynCurrentIndicator) {
+        // выбрать первый сопоставимый по умолчанию
+        const first = INDICATORS.find(i => i.comparable && i.b22!=null && i.b23!=null && i.b24!=null);
+        if (first) selectDynIndicator(first.n);
+      }
+      setTimeout(() => charts.forEach(c => c.resize()), 60);
+    });
+  });
+
+  // Список показателей
+  const selInd = document.getElementById('dynIndicator');
+  const selBlk = document.getElementById('dynBlock');
+  const comp = INDICATORS.filter(i => i.comparable && i.b22!=null && i.b23!=null && i.b24!=null);
+  function fillIndicators(blockFilter){
+    const list = comp.filter(i => blockFilter === 'all' || i.block === blockFilter);
+    selInd.innerHTML = list.map(i => `<option value="${i.n}">${i.n}. ${i.name} (${BLOCKS[i.block].short})</option>`).join('');
+    if (list.length) selectDynIndicator(list[0].n);
+  }
+  fillIndicators('all');
+
+  selBlk.addEventListener('change', () => {
+    fillIndicators(selBlk.value);
+  });
+  selInd.addEventListener('change', () => {
+    selectDynIndicator(+selInd.value);
+  });
+}
+
+function selectDynIndicator(n){
+  dynCurrentIndicator = n;
+  const selInd = document.getElementById('dynIndicator');
+  if (selInd && String(selInd.value) !== String(n)) selInd.value = String(n);
+  const it = INDICATORS.find(i => i.n === n);
+  if (!it) return;
+
+  // Шапка карточки
+  document.getElementById('dyn-block-dot').className = `dot dot-${it.block}`;
+  document.getElementById('dyn-block-label').textContent = BLOCKS[it.block].label;
+  document.getElementById('dyn-name').textContent = `${it.n}. ${it.name}`;
+  document.getElementById('dyn-ministry').textContent = 'Ответственный: ' + it.ministry;
+  document.getElementById('dyn-source').textContent = 'Источник: ' + it.source + (it.comparable ? ' · сопоставимый ряд' : '');
+
+  // Изменения
+  const d1 = (it.b24 != null && it.b23 != null) ? it.b24 - it.b23 : null;
+  const d2 = (it.b24 != null && it.b22 != null) ? it.b24 - it.b22 : null;
+  const fmtDelta = v => v == null ? 'н/д' : (v > 0 ? '+' : '') + fmt1(v);
+  const colDelta = v => v == null ? 'text-slate-500' : v > 0 ? 'text-emerald-600' : v < 0 ? 'text-rose-600' : 'text-slate-500';
+  const el1 = document.getElementById('dyn-d1');
+  el1.textContent = fmtDelta(d1);
+  el1.className = 'font-semibold ' + colDelta(d1);
+  const el2 = document.getElementById('dyn-d2');
+  el2.textContent = fmtDelta(d2);
+  el2.className = 'font-semibold ' + colDelta(d2);
+  document.getElementById('dyn-v24').textContent = it.v24 ?? 'н/д';
+
+  // Таблица по годам
+  const row = (y, v, b) => `<tr class="border-t border-[#e2e8f0]">
+    <td class="py-1.5 text-slate-500">${y}</td>
+    <td class="py-1.5 text-right text-slate-700">${v ?? 'н/д'}</td>
+    <td class="py-1.5 text-right font-semibold">${b!=null ? fmt1(b) : 'н/д'}</td>
+  </tr>`;
+  document.getElementById('dyn-table').innerHTML =
+    `<tr class="text-[10px] uppercase text-slate-400">
+      <td class="pb-1">Год</td><td class="pb-1 text-right">Значение</td><td class="pb-1 text-right">Балл</td>
+    </tr>` +
+    row(2022, it.v22, it.b22) + row(2023, it.v23, it.b23) + row(2024, it.v24, it.b24);
+
+  // Линейный график: баллы по годам
+  const years = ['2022', '2023', '2024'];
+  const values = [it.b22, it.b23, it.b24];
+  const valueLabels = [it.v22, it.v23, it.v24];
+  const color = BLOCKS[it.block].color;
+  makeChart('chart-dyn-line', {
+    backgroundColor: 'transparent',
+    tooltip: {
+      ...TT,
+      trigger: 'axis',
+      formatter: p => {
+        const idx = p[0].dataIndex;
+        return `<b>${years[idx]}</b><br/>Значение: <b>${valueLabels[idx] ?? 'н/д'}</b><br/>Балл: <b>${values[idx] != null ? fmt1(values[idx]) : 'н/д'}</b>`;
+      }
+    },
+    grid: { left: 45, right: 30, top: 45, bottom: 30, containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: years,
+      boundaryGap: false,
+      axisLine: { lineStyle: { color: '#e2e8f0' } },
+      axisTick: { show: false },
+      axisLabel: { color: '#64748b', fontSize: 12 }
+    },
+    yAxis: {
+      type: 'value', min: 0, max: 100,
+      splitLine: { lineStyle: { color: '#e2e8f0' } },
+      axisLabel: { color: '#64748b', fontSize: 10 }
+    },
+    series: [{
+      type: 'line',
+      data: values,
+      smooth: false,
+      symbol: 'circle',
+      symbolSize: 10,
+      itemStyle: { color: color, borderColor: '#fff', borderWidth: 2 },
+      lineStyle: { color: color, width: 3 },
+      areaStyle: { color: color, opacity: 0.08 },
+      label: {
+        show: true,
+        position: 'top',
+        color: '#1e293b',
+        fontSize: 11,
+        fontWeight: 700,
+        formatter: p => p.value != null ? fmt1(p.value) : 'н/д'
+      },
+      markLine: {
+        symbol: 'none',
+        silent: true,
+        lineStyle: { color: '#94a3b8', type: 'dashed', width: 1 },
+        label: { show: true, position: 'insideEndTop', color: '#64748b', fontSize: 10, formatter: 'порог 50' },
+        data: [{ yAxis: 50 }]
+      }
+    }]
+  });
+}
+
+function renderGaps(f='all'){
+  const low = INDICATORS.filter(i => i.b24 < THRESHOLDS.yellow);
+  const grouped = { gov:[], biz:[], sci:[] };
+  low.forEach(i => grouped[i.block].push(i));
+
+  document.getElementById('gaps-summary').innerHTML = Object.keys(BLOCKS).map(k => {
+    const n = grouped[k].length;
+    return `<div class="card p-5">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="dot dot-${k}"></span>
+        <span class="text-xs font-semibold text-slate-600 uppercase">${BLOCKS[k].label}</span>
+      </div>
+      <div class="flex items-baseline gap-2">
+        <span class="kpi-val ${n===0?'text-emerald-600':'text-rose-600'}">${n}</span>
+        <span class="text-xs text-slate-500">${n===0?'ни одного':plural(n,['показатель','показателя','показателей'])}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('gaps-sections').innerHTML = Object.keys(BLOCKS).filter(k => f==='all' || k===f).map(k => {
+    const items = grouped[k].sort((a,b) => a.b24 - b.b24);
+    const rows = items.length === 0 ? `<tr><td colspan="5" class="py-8 text-center text-emerald-600 text-sm">Все показатели блока выше порога 50</td></tr>` : items.map((i, idx) => `
+      <tr class="border-t border-[#e2e8f0] cursor-pointer hover:bg-[#eef2f7] transition gap-row" data-gap="${k}-${idx}">
+        <td class="py-3">
+          <div class="font-medium text-slate-800">${i.name}</div>
+          <div class="text-[11px] text-slate-500">${i.ministry}</div>
+        </td>
+        <td class="text-center font-medium">${i.v24}</td>
+        <td class="text-center">${ballChip(i.b24)}</td>
+        <td class="text-center text-xs text-slate-500">${INDUSTRY[i.n] || 'н/д'}</td>
+        <td class="text-center text-slate-500 text-xs whitespace-nowrap">подробнее ▸</td>
+      </tr>
+      <tr class="hidden gap-detail" id="gap-${k}-${idx}">
+        <td colspan="5" class="py-3 px-4 bg-[#f8fafc]">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="rounded-lg border border-[#e8edf3] p-3">
+              <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Значение и балл по годам</p>
+              <div class="space-y-1 text-slate-600">
+                <div class="flex justify-between"><span>2022</span><span>${i.v22 ?? 'н/д'} · ${i.b22!=null?fmt1(i.b22):'н/д'}</span></div>
+                <div class="flex justify-between"><span>2023</span><span>${i.v23 ?? 'н/д'} · ${i.b23!=null?fmt1(i.b23):'н/д'}</span></div>
+                <div class="flex justify-between font-semibold text-slate-800"><span>2024</span><span>${i.v24 ?? 'н/д'} · ${fmt1(i.b24)}</span></div>
+              </div>
+            </div>
+            <div class="rounded-lg border border-[#e8edf3] p-3">
+              <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Ответственный</p>
+              <p class="text-slate-600">${i.ministry}</p>
+              ${i.comparable ? '<p class="mt-1 text-[10px]"> <span class="text-slate-500">сопоставимый ряд</span></p>' : ''}
+            </div>
+            <div class="rounded-lg border border-[#e8edf3] p-3">
+              <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Потенциал</p>
+              <p class="text-slate-600">${i.effort!=null ? `Усилие до порога: <b class="text-amber-700">${i.effort}%</b>, +${i.gainBlock} к блоку, +${fmt1(i.gainTotal)} к итогу` : 'не оценивалось'}</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    return `<div class="card p-5">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="dot dot-${k}"></span>
+        <h4 class="text-sm font-semibold text-slate-800">${BLOCKS[k].label}</h4>
+        ${items.length ? `<span class="text-[11px] text-slate-500">· ${items.length} ${plural(items.length,['показатель','показателя','показателей'])} ниже порога</span>` : ''}
+      </div>
+      <table class="w-full">
+        <thead>
+          <tr class="text-left text-[10px] text-slate-500 uppercase border-b border-[#e2e8f0]">
+            <th class="pb-2">Показатель</th>
+            <th class="pb-2 text-center">Значение 2024</th>
+            <th class="pb-2 text-center">Балл 2024</th>
+            <th class="pb-2 text-center">Отрасль</th>
+            <th class="pb-2"></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.gap-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const d = document.getElementById('gap-' + row.dataset.gap);
+      d.classList.toggle('hidden');
+      row.lastElementChild.textContent = d.classList.contains('hidden') ? 'подробнее ▸' : 'свернуть ▾';
+    });
+  });
+}
+
+function renderCheap(f='all'){
+  const items = INDICATORS.filter(i => i.effort != null && Number.isFinite(i.b24) && i.b24 < 100 && (f === 'all' || i.block === f)).sort((a,b) => a.effort - b.effort);
+  const top = items.slice(0, 5);
+
+  document.getElementById('cheap-top').innerHTML = top.length === 0
+    ? `<div class="card p-4 sm:col-span-2 lg:col-span-5 text-center text-xs text-slate-500 py-6">Для выбранного блока нет показателей с расчётом</div>`
+    : top.map((i, idx) => `
+    <div class="card p-4 relative overflow-hidden">
+      <div class="absolute top-3 right-3 text-2xl font-bold text-slate-900/10">#${idx+1}</div>
+      <span class="text-[10px] uppercase font-semibold text-blue-600">${BLOCKS[i.block].short}</span>
+      <p class="text-xs font-semibold text-slate-800 mt-1 mb-3 h-8 leading-snug">${i.name}</p>
+      <div class="space-y-1 text-[11px]">
+        <div class="flex justify-between text-slate-500"><span>Усилие:</span><b class="text-amber-700">${i.effort}%</b></div>
+        <div class="flex justify-between text-slate-500"><span>+ к блоку:</span><b class="text-emerald-600">+${i.gainBlock}</b></div>
+        <div class="flex justify-between text-slate-500"><span>+ к итогу:</span><b class="text-emerald-700">+${fmt1(i.gainTotal)}</b></div>
+      </div>
+    </div>
+  `).join('');
+
+  makeChart('chart-cheap', {
+    backgroundColor: 'transparent',
+    tooltip: {
+      ...TT,
+      formatter: p => {
+        return `<div style="font-weight:700;margin-bottom:4px;color:#1e293b">${p.data.value[2]}</div>
+                Усилие: <b style="color:#b45309">${p.data.value[0]}%</b><br/>
+                + балл блоку: <b style="color:#059669">+${p.data.value[1]}</b>`;
+      }
+    },
+    legend: { top: 0, right: 10, icon:'roundRect', itemWidth:10, itemHeight:10, textStyle:{color:'#475569',fontSize:11}, data:['Органы власти','Бизнес','Исследователи'] },
+    grid: { left: 56, right: 30, top: 45, bottom: 50, containLabel: true },
+    xAxis: {
+      type:'value', name:'Усилие, % до порога', nameLocation:'middle', nameGap:30,
+      nameTextStyle:{ color:'#64748b', fontSize:11 },
+      splitLine:{ lineStyle:{ color:'#e2e8f0' } },
+      axisLabel:{ color:'#64748b', fontSize:10 }
+    },
+    yAxis: {
+      type:'value', name:'+ балл блоку', nameLocation:'middle', nameGap:40,
+      nameTextStyle:{ color:'#64748b', fontSize:11 },
+      splitLine:{ lineStyle:{ color:'#e2e8f0' } },
+      axisLabel:{ color:'#64748b', fontSize:10 }
+    },
+    series: ['gov','biz','sci'].map(k => ({
+      name: BLOCKS[k].short,
+      type: 'scatter',
+      data: items.filter(i => i.block === k).map(i => ({ value:[i.effort,i.gainBlock,i.name] })),
+      itemStyle: { color: BLOCKS[k].color },
+      symbolSize: 13, z:3
+    }))
+  });
+
+  document.getElementById('cheap-body').innerHTML = items.map(i => {
+    const color = barColor(i.b24);
+    return `<tr class="border-t border-[#e2e8f0] hover:bg-[#eef2f7] transition">
+      <td class="py-3.5 pr-4">
+        <div class="text-sm font-medium text-slate-800">${i.name}</div>
+        <div class="text-[10px] text-slate-500 flex items-center gap-1.5 mt-0.5"><span class="dot dot-${i.block}" style="width:5px;height:5px;margin:0;"></span>${BLOCKS[i.block].short}</div>
+      </td>
+      <td class="py-3.5 pr-4 text-center text-sm text-slate-700">${i.v24}</td>
+      <td class="py-3.5 pr-4 text-center text-sm text-blue-700 font-medium">${i.target || 'н/д'}</td>
+      <td class="py-3.5 pr-4">
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${i.b24}%; background:${color}"></div>
+          <div class="bar-mark" style="left:${THRESHOLDS.yellow}%"></div>
+          <div class="bar-mark" style="left:${THRESHOLDS.green}%"></div>
+        </div>
+        <div class="text-[10px] text-slate-500 mt-1">балл ${fmt1(i.b24)}, следующий порог ${i.b24 < 50 ? 50 : (i.b24 < 75 ? 75 : 'не задан')}</div>
+      </td>
+      <td class="py-3.5 pr-4 text-center text-amber-700 font-semibold text-sm">${i.effort}%</td>
+      <td class="py-3.5 pr-4 text-center text-emerald-600 font-semibold text-sm">+${i.gainBlock}</td>
+      <td class="py-3.5 pr-4 text-center text-emerald-700 font-semibold text-sm">+${fmt1(i.gainTotal)}</td>
+      <td class="py-3.5 pr-4 text-slate-500 text-xs">${i.ministry}</td>
+      <td class="py-3.5 text-slate-500 text-xs">${INDUSTRY[i.n] || 'н/д'}</td>
+    </tr>`;
+  }).join('');
+}
+
+let detailsTable = null;
+function initDetailsTable(){
+  const ministries = [...new Set(INDICATORS.map(i => i.ministry))].sort();
+  document.getElementById('detMinistry').innerHTML = '<option value="">Все министерства</option>' + ministries.map(m => `<option value="${m}">${m}</option>`).join('');
+
+  detailsTable = $('#details-table').DataTable({
+    data: INDICATORS.slice(),
+    pageLength: 12,
+    lengthMenu: [12, 25, 40],
+    order: [[0, 'asc']],
+    language: { search:'', searchPlaceholder:'Поиск…', lengthMenu:'Показать _MENU_', info:'_START_-_END_ из _TOTAL_', zeroRecords:'Ничего не найдено', paginate:{ previous:'‹', next:'›' } },
+    columns: [
+      { data:'n', width:'40px', className:'text-slate-500 font-mono text-xs' },
+      { data:'name', render:(v,t,r) => `<div class="font-medium text-slate-800">${v}${r.comparable?' ':''}</div>` },
+      { data:'block', render:v => blockCell(v) },
+      { data:'v24', render:v => `<span class="text-slate-800 font-medium">${v ?? 'н/д'}</span>`, className:'text-center' },
+      { data:'b24', render:(v,t,r) => scoreBadge(r), className:'text-center' },
+      { data:'ministry', className:'text-slate-500 text-xs' },
+      { data:'year', className:'text-center text-slate-500 text-xs' },
+      { data:null, orderable:false, className:'text-center', render: () => '<span class="dt-chev text-slate-400 text-xs whitespace-nowrap">подробнее ▸</span>' }
+    ]
+  });
+
+  $('#details-table tbody').on('click', 'tr', function(){
+    const row = detailsTable.row(this);
+    if (!row.data()) return;
+    const d = row.data();
+    const chev = this.querySelector('.dt-chev');
+    if (row.child.isShown()) { row.child.hide(); if (chev) chev.textContent = 'подробнее ▸'; }
+    else {
+      row.child(`
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs py-2">
+          <div class="rounded-lg border border-[#e8edf3] p-3">
+            <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Значение и балл по годам</p>
+            <div class="space-y-1 text-slate-600">
+              <div class="flex justify-between"><span>2022</span><span>${d.v22 ?? 'н/д'} · ${d.b22!=null?fmt1(d.b22):'н/д'}</span></div>
+              <div class="flex justify-between"><span>2023</span><span>${d.v23 ?? 'н/д'} · ${d.b23!=null?fmt1(d.b23):'н/д'}</span></div>
+              <div class="flex justify-between font-semibold text-slate-800"><span>2024</span><span>${d.v24 ?? 'н/д'} · ${fmt1(d.b24)}</span></div>
+            </div>
+          </div>
+          <div class="rounded-lg border border-[#e8edf3] p-3">
+            <p class="text-[10px] uppercase tracking-wider text-slate-500 mb-1.5">Потенциал</p>
+            <p class="text-slate-600">${d.effort!=null ? `Усилие до порога: <b class="text-amber-700">${d.effort}%</b>, +${d.gainBlock} к блоку, +${fmt1(d.gainTotal)} к итогу` : 'не оценивалось'}</p>
+          </div>
+        </div>`).show(); if (chev) chev.textContent = 'свернуть ▾';
+    }
+  });
+
+  document.querySelectorAll('.detail-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.detail-tab').forEach(b => { b.classList.replace('bg-blue-800','bg-[#e8edf3]'); b.classList.replace('text-white','text-slate-600'); });
+      btn.classList.replace('bg-[#e8edf3]','bg-blue-800'); btn.classList.replace('text-slate-600','text-white');
+      const df = btn.dataset.df;
+      let rows = INDICATORS.slice();
+      if (df === 'gaps') rows = rows.filter(i => i.b24 < THRESHOLDS.yellow);
+      if (df === 'comparable') rows = rows.filter(i => i.comparable);
+      detailsTable.clear().rows.add(rows).draw();
+    });
+  });
+
+  ['detBlock','detMinistry','detRange'].forEach(id => {
+    document.getElementById(id).addEventListener('change', () => {
+      let rows = INDICATORS.slice();
+      const b = document.getElementById('detBlock').value;
+      const m = document.getElementById('detMinistry').value;
+      const r = document.getElementById('detRange').value;
+      if (b) rows = rows.filter(i => i.block === b);
+      if (m) rows = rows.filter(i => i.ministry === m);
+      if (r) {
+        const [lo,hi] = r.split('-').map(Number);
+        rows = rows.filter(i => i.b24 >= lo && i.b24 <= hi);
+      }
+      detailsTable.clear().rows.add(rows).draw();
+    });
+  });
+}
+
+function renderRegions(){
+  const rows = TOP15.slice().reverse();
+  const ladderChart = makeChart('chart-ladder', {
+    backgroundColor: 'transparent',
+    tooltip: { ...TT, formatter: p => `<b>${rows[p.dataIndex].name}</b><br/>Итог: <b>${rows[p.dataIndex].score}</b>` },
+    grid: { left: 10, right: 60, top: 26, bottom: 30, containLabel: true },
+    xAxis: { type:'value', min: 0, splitLine:{ lineStyle:{ color:'#e2e8f0' } }, axisLabel:{ color:'#64748b', fontSize:10 }, axisLine:{ show:false } },
+    yAxis: { type:'category', data: rows.map(d => `${d.r24}. ${d.name}`), axisLine:{ show:false }, axisTick:{ show:false }, axisLabel:{ color:'#334155', fontSize:11 } },
+    series: [{
+      type: 'bar', barWidth: 16,
+      data: rows.map(d => d.name === NSO_NAME ? { value:d.score, itemStyle:{ color:'#2563eb' } } : { value:d.score, itemStyle:{ color:'#334155' } }),
+      label: { show:true, position:'right', color:'#1e293b', fontSize:10,
+        formatter: p => { const sc = rows[p.dataIndex].score; if (rows[p.dataIndex].name===NSO_NAME) return fmt2(sc); const d = sc - NSO_SCORE;
+          const diff = d >= 0 ? '+' + fmt2(d) : '-' + fmt2(-d);
+          return `${fmt2(sc)}  ({sub|${diff}})`; },
+        rich: { sub: { fontSize: 9, color: '#64748b' } } },
+      markLine: {
+        symbol:'none',
+        lineStyle:{ color:'#1d4ed8', type:'dashed', width:1.5 },
+        label:{ show:true, position:'insideEndTop', formatter:'НСО 152,37', color:'#1d4ed8', fontSize:11 },
+        data:[{ xAxis: NSO_SCORE }]
+      }
+    }]
+  });
+  
+
+  const top5 = TOP15.slice(0,5);
+  const shortRegion = n => n.replace(/ область$/, ' обл.').replace(/^Республика /, 'Респ. ');
+  const names = top5.map(d => ('  ' + shortRegion(d.name).replace(' обл.', '\nобл.').replace(' край', '\nкрай').replace('-', '-\n')).split('\n').map(s => '\u00A0\u00A0' + s).join('\n'));
+  const buildBlockC = (key, color) => ({
+    backgroundColor: 'transparent',
+    tooltip: { ...TT, formatter: p => `<b>${p.name}</b><br/>Балл: ${fmt1(p.value)}` },
+    grid: { left: 14, right: 52, top: 5, bottom: 5, containLabel: true },
+    xAxis: { type:'value', max: 100, show: false },
+    yAxis: { type:'category', data: names, inverse: true, axisLine:{ show:false }, axisTick:{ show:false }, axisLabel:{ color:'#1e293b', fontSize:11, lineHeight: 14 } },
+    series: [{
+      type: 'bar', barWidth: 16,
+      data: top5.map(d => ({ value:d[key], itemStyle:{ color: d.name===NSO_NAME ? color : '#94a3b8', borderRadius:[0,3,3,0] } })),
+      label: { show:true, position:'right', color:'#1e293b', fontSize:11, fontWeight:700, formatter: p => fmt1(p.value) }
+    }]
+  });
+  makeChart('chart-compare-gov', buildBlockC('gov', '#d97706'));
+  makeChart('chart-compare-biz', buildBlockC('biz', '#0284c7'));
+  makeChart('chart-compare-sci', buildBlockC('sci', '#6366f1'));
+
+  $('#top15-table').DataTable({
+    data: TOP15,
+    paging: false, searching: false, info: false, ordering: false,
+    rowCallback: (row, data) => { if (data.name === NSO_NAME) row.classList.add('nso-row'); },
+    columns: [
+      { data:'r24', render:(v,t,r) => `<span class="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${r.name===NSO_NAME ? 'bg-blue-800 text-white' : 'bg-[#eef2f7] text-slate-700'}">${v}</span>`, className:'text-center', width:'60px' },
+      { data:'name', render:(v,t,r) => r.name===NSO_NAME ? `<span class="text-blue-700 font-bold">${v}</span>` : v, className:'font-medium text-slate-700' },
+      { data:'gov', render:v => ballChipBlock(v), className:'text-center' },
+      { data:'biz', render:v => ballChipBlock(v), className:'text-center' },
+      { data:'sci', render:v => ballChipBlock(v), className:'text-center' },
+      { data:'score', render:v => fmt2(v), className:'text-right font-bold text-slate-800' },
+      { data:null, render:(v,t,r) => r.r23a===r.r23b ? `<span class="text-slate-500">${r.r23a}</span>` : `<span class="text-slate-500">${r.r23a}-${r.r23b}</span>`, className:'text-center' }
+    ]
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  renderProfile();
+  renderGaps();
+  renderCheap();
+  initDetailsTable();
+  renderRegions();
+  initDynamics();
+
+  const h = location.hash.replace('#','');
+  if (TABS.includes(h) && h !== 'profile') switchTab(h);
+
+  document.getElementById('fltProfile').addEventListener('change', function(){ renderProfile(this.value); });
+  document.getElementById('fltGaps').addEventListener('change', function(){ renderGaps(this.value); });
+  document.getElementById('fltCheap').addEventListener('change', function(){ renderCheap(this.value); });
+});
+
+function printReport(){
+  const scope = document.getElementById('printScope').value;
+  const activeTab = TABS.find(t => !document.getElementById('screen-'+t).classList.contains('hidden')) || 'profile';
+  const sections = TABS.map(t => document.getElementById('screen-'+t));
+  const prevHidden = sections.map(s => s.classList.contains('hidden'));
+  if (scope === 'all') sections.forEach(s => s.classList.remove('hidden'));
+  let prevLen = null;
+  if (detailsTable) { prevLen = detailsTable.page.len(); detailsTable.page.len(-1).draw(false); }
+
+  let restored = false;
+  const restore = () => {
+    if (restored) return;
+    restored = true;
+    sections.forEach((s, i) => s.classList.toggle('hidden', scope === 'all' ? prevHidden[i] : s.id !== 'screen-' + activeTab));
+    if (detailsTable && prevLen != null) detailsTable.page.len(prevLen).draw(false);
+    setTimeout(() => charts.forEach(c => c.resize()), 60);
+  };
+
+  requestAnimationFrame(() => {
+    charts.forEach(c => c.resize());
+    requestAnimationFrame(() => {
+      window.onafterprint = restore;
+      window.print();
+      setTimeout(() => { window.onafterprint = null; restore(); }, 1500);
+    });
+  });
+}
+</script>
+</body>
+</html>
