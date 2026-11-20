@@ -325,6 +325,9 @@
   .step.active b { background: var(--accent); color: #fff; }
   .step.done b { background: var(--ok-fg); color: #fff; }
 
+  .step:disabled { color: var(--text-3); background: var(--surface-soft); border-color: var(--border); cursor: not-allowed; }
+  .status-panel { display: grid; gap: 8px; padding: 12px 14px; background: var(--surface-soft); border: 1px solid var(--border); border-radius: 8px; }
+  .sp-label { font-size: 12px; font-weight: 600; color: var(--text-2); min-width: 64px; }
   .drop { border: 1px dashed var(--border-field); background: var(--surface-soft); border-radius: 8px; padding: 24px; text-align: center; font-size: 14px; color: var(--text-2); cursor: pointer; }
   .drop:hover, .drop.is-over { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
   .drop.is-loaded { border-style: solid; border-color: var(--ok-bd); background: var(--ok-bg); color: var(--ok-fg); }
@@ -401,7 +404,7 @@
             <option value="admin" selected>Администратор</option>
             <option value="user">Пользователь</option>
           </select>
-          <p class="hint">Администратор видит разделы 8–9. Пользователь — только аналитику.</p>
+          <p class="hint">Администратор видит разделы 8–11. Пользователь — только аналитику.</p>
         </div>
       </div>
 
@@ -415,8 +418,10 @@
         <button onclick="switchTab('local')" id="btn-local" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">7. Локальные изменения</button>
         <div class="divider"></div>
         <p class="group-label" id="admin-group">Управление данными · администратор</p>
-        <button onclick="switchTab('update')" id="btn-update" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">8. Обновление показателей</button>
-        <button onclick="switchTab('sources')" id="btn-sources" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">9. Источники и ответственные</button>
+        <button onclick="switchTab('home')" id="btn-home" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">8. Главный экран данных</button>
+        <button onclick="switchTab('rating')" id="btn-rating" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">9. Загрузка рейтинга</button>
+        <button onclick="switchTab('update')" id="btn-update" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">10. Обновление показателей</button>
+        <button onclick="switchTab('sources')" id="btn-sources" class="nav-btn w-full text-left px-4 py-3 text-sm font-medium">11. Источники и ответственные</button>
       </nav>
 
       <div class="card p-4 space-y-3">
@@ -856,19 +861,237 @@
         <div id="local-sections" class="space-y-6"></div>
       </section>
 
+      <!-- ГЛАВНЫЙ ЭКРАН ДАННЫХ -->
+      <section id="screen-home" class="hidden space-y-6">
+        <div class="card p-5">
+          <h3 class="screen-title">Главный экран данных</h3>
+          <p class="hint" style="margin-top:4px">Что действует в дашборде сейчас и какие загрузки не завершены. Черновики на аналитику не влияют. Версии и даты в макете демонстрационные.</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <button class="btn btn-primary" type="button" data-home-go="rating">Загрузить рейтинг</button>
+            <button class="btn btn-primary" type="button" data-home-go="update">Обновить показатели</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="card p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h4 class="sub-title">Действующие данные</h4>
+              <span class="status status-ok">Все подтверждены</span>
+            </div>
+            <p class="group-label" style="padding-left:0">Итоговый рейтинг (PDF)</p>
+            <div class="table-wrap" style="max-height:none">
+              <table>
+                <thead><tr><th>Год</th><th>Версия</th><th>Подтверждена</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><b>2024</b></td><td>версия 3</td><td>14.02.2026</td><td><button class="btn btn-sm" data-home-view="Рейтинг 2024">Открыть</button></td></tr>
+                  <tr><td><b>2023</b></td><td>версия 2</td><td>15.02.2025</td><td><button class="btn btn-sm" data-home-view="Рейтинг 2023">Открыть</button></td></tr>
+                  <tr><td><b>2022</b></td><td>версия 1</td><td>20.01.2024</td><td><button class="btn btn-sm" data-home-view="Рейтинг 2022">Открыть</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="group-label" style="padding-left:0">Показатели НСО</p>
+            <div class="table-wrap" style="max-height:none">
+              <table>
+                <thead><tr><th>Год</th><th>Версия</th><th>Методика</th><th>Подтверждена</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td><b>2024</b></td><td>версия 2</td><td>2024, ред. 2</td><td>12.02.2026</td><td><button class="btn btn-sm" data-home-view="Показатели 2024">Открыть</button></td></tr>
+                  <tr><td><b>2023</b></td><td>версия 1</td><td>2023, ред. 1</td><td>15.02.2025</td><td><button class="btn btn-sm" data-home-view="Показатели 2023">Открыть</button></td></tr>
+                  <tr><td><b>2022</b></td><td>версия 1</td><td>2022, ред. 1</td><td>20.01.2024</td><td><button class="btn btn-sm" data-home-view="Показатели 2022">Открыть</button></td></tr>
+                  <tr><td><b>2025</b></td><td colspan="3"><span class="na">Данных нет</span></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h4 class="sub-title">Черновики</h4>
+              <span class="status status-warn" id="drafts-count">0 в работе</span>
+            </div>
+            <div class="space-y-3 mt-3" id="drafts-list"></div>
+            <div id="drafts-empty" class="notice mt-3" hidden>Нет активных черновиков.</div>
+            <p class="hint">Рейтинг и показатели загружаются независимо: у каждого свой черновик и своя версия.</p>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <h4 class="sub-title">Методики</h4>
+          <p class="hint">Методику не нужно загружать каждый год: если она не менялась, при обновлении показателей выбирается действующая редакция. Новая редакция создаётся только при загрузке файла.</p>
+          <div class="table-wrap mt-3" style="max-height:none">
+            <table>
+              <thead><tr><th>Редакция</th><th>Применяется к периодам</th><th>Загружена</th></tr></thead>
+              <tbody>
+                <tr><td>2022, ред. 1</td><td>2022</td><td>20.01.2024</td></tr>
+                <tr><td>2023, ред. 1</td><td>2023</td><td>15.02.2025</td></tr>
+                <tr><td>2024, ред. 2</td><td>2024; 2025 — если при обновлении будет подтверждено, что методика не менялась</td><td>12.02.2026</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ЗАГРУЗКА РЕЙТИНГА -->
+      <section id="screen-rating" class="hidden space-y-6">
+        <div class="card p-5">
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div>
+              <h3 class="screen-title">Загрузка итогового рейтинга</h3>
+              <p class="hint" style="margin-top:4px" id="r-note">PDF национального рейтинга НТР за год: баллы трёх блоков, итоговый балл и места всех регионов. Черновик не влияет на аналитику до подтверждения. Распознавание в макете имитируется: файл не читается, показан пример результата.</p>
+            </div>
+            <div class="flex flex-wrap gap-2 flex-shrink-0 items-center">
+              <span class="status status-info" id="r-badge">Черновик · рейтинг · 2024</span>
+              <span class="status status-neutral" id="r-version">Версия не создана</span>
+              <button class="btn btn-sm" id="r-open-dashboard" type="button">Открыть дашборд</button>
+            </div>
+          </div>
+          <div class="stepper mt-4" role="tablist" aria-label="Шаги загрузки рейтинга">
+            <button class="step active" data-rstep="1" role="tab" aria-selected="true"><b>1</b>Год и файл</button>
+            <button class="step" data-rstep="2" role="tab" aria-selected="false"><b>2</b>Распознанное</button>
+            <button class="step" data-rstep="3" role="tab" aria-selected="false"><b>3</b>Исправление</button>
+            <button class="step" data-rstep="4" role="tab" aria-selected="false"><b>4</b>Подтверждение и ограничения</button>
+          </div>
+          <div class="status-panel mt-4" role="group" aria-label="Панель статусов рейтинга">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="sp-label">Ячейка:</span>
+              <span class="status status-ok">распознано</span>
+              <span class="status status-warn">не распознано</span>
+              <span class="status status-err">конфликт</span>
+              <span class="status status-warn">дубль</span>
+              <span class="status status-info">исправлено вручную</span>
+            </div>
+            <p class="hint" style="margin:0">Не распознанное значение показывается как «—», а не нулём. Официальные баллы блоков и итог берутся из PDF и не заменяются суммой или средним.</p>
+          </div>
+        </div>
+
+        <section class="card p-5 rflow" data-rflow="1">
+          <h4 class="sub-title">Год рейтинга и файл PDF</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label class="field-label" for="r-year">Год рейтинга</label>
+              <select id="r-year" class="field"><option value="2025">2025 (данных нет)</option><option value="2024" selected>2024 (уже загружен)</option><option value="2023">2023</option><option value="2022">2022</option></select>
+              <p class="hint" id="r-year-hint"></p>
+            </div>
+            <div>
+              <p class="field-label">Файл PDF рейтинга</p>
+              <div class="drop" data-drop="rating" tabindex="0" role="button" aria-describedby="rating-meta">Выберите или перетащите PDF<input id="rating-file" type="file" accept=".pdf" hidden></div>
+              <p class="file-meta" id="rating-meta">Файл не выбран</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 justify-between mt-5">
+            <button class="btn" data-r-save>Сохранить черновик</button>
+            <button class="btn btn-primary" data-rnext="2">Показать распознанное</button>
+          </div>
+        </section>
+
+        <section class="card p-5 rflow" data-rflow="2" hidden>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h4 class="sub-title">Распознанные баллы и места</h4>
+              <p class="hint">Распознавание не подменяет значения: проблемные строки передаются человеку.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <span class="status status-neutral">Распознано 82 из 85 (демо)</span>
+              <span class="status status-warn">1 не распознано</span>
+              <span class="status status-err">1 конфликт</span>
+              <span class="status status-warn">1 дубль</span>
+            </div>
+          </div>
+          <div class="table-wrap mt-4">
+            <table>
+              <thead><tr><th>Регион</th><th class="num">Органы власти</th><th class="num">Бизнес</th><th class="num">Исследователи</th><th class="num">Итог</th><th class="center">Место</th><th>Сверка</th><th>Статус</th></tr></thead>
+              <tbody id="r-table"></tbody>
+            </table>
+          </div>
+          <p class="hint">Показаны 8 из 85 строк. «Сверка» — только контроль: сумма трёх блоков должна совпадать с итогом (допуск 0,1), места идут по убыванию итога. Сумма не подставляется вместо официального значения.</p>
+          <div class="flex flex-wrap gap-2 justify-between mt-5">
+            <button class="btn" data-rprev="1">Назад</button>
+            <button class="btn btn-primary" data-rnext="3">К исправлению</button>
+          </div>
+        </section>
+
+        <section class="card p-5 rflow" data-rflow="3" hidden>
+          <h4 class="sub-title">Исправление проблемных строк</h4>
+          <p class="hint">Только проблемные строки. Исправленное вручную помечается. Значение вводится по оригиналу PDF; подбирать его по сумме нельзя.</p>
+          <div class="error-summary mt-4" role="alert" tabindex="-1" id="r-err-summary"></div>
+          <div class="table-wrap mt-4" style="max-height:none">
+            <table>
+              <thead><tr><th>Регион</th><th>Что не так</th><th>Исправление по оригиналу</th><th>Статус</th><th></th></tr></thead>
+              <tbody>
+                <tr id="r-fix-nn" class="problem-warn">
+                  <td>Нижегородская область</td>
+                  <td>Блок «Бизнес»: значение не распознано</td>
+                  <td><label class="sr-only" for="r-in-nn">Значение блока «Бизнес»</label><input id="r-in-nn" class="field" inputmode="decimal" placeholder="значение из PDF" style="max-width:150px; min-height:0; padding:6px 10px"></td>
+                  <td class="r-st"><span class="status-cell sc-warn" data-icon="warn">Не распознано</span></td>
+                  <td><button class="btn btn-sm btn-primary" data-r-fix="nn">Сохранить</button></td>
+                </tr>
+                <tr id="r-fix-tomsk" class="problem-err">
+                  <td>Томская область</td>
+                  <td>Место 5 уже занято: у Новосибирской области итог выше</td>
+                  <td><label class="sr-only" for="r-in-tomsk">Место</label><input id="r-in-tomsk" class="field" inputmode="numeric" placeholder="место из PDF" style="max-width:150px; min-height:0; padding:6px 10px"></td>
+                  <td class="r-st"><span class="status-cell sc-err" data-icon="err">Конфликт</span></td>
+                  <td><button class="btn btn-sm btn-primary" data-r-fix="tomsk">Сохранить</button></td>
+                </tr>
+                <tr id="r-fix-dup" class="problem-warn">
+                  <td>Республика Башкортостан</td>
+                  <td>Две строки для одного региона (стр. 3 и стр. 4)</td>
+                  <td>
+                    <label class="check" style="margin:0"><input type="radio" name="r-dup" value="a" checked> <span>строка со стр. 3</span></label>
+                    <label class="check" style="margin:0"><input type="radio" name="r-dup" value="b"> <span>строка со стр. 4</span></label>
+                  </td>
+                  <td class="r-st"><span class="status-cell sc-warn" data-icon="warn">Дубль</span></td>
+                  <td><div class="flex flex-wrap gap-2"><button class="btn btn-sm btn-primary" data-r-fix="dup">Выбрать строку</button><button class="btn btn-sm" data-r-fix="dup-none">Исключить обе</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex flex-wrap gap-2 justify-between mt-5">
+            <button class="btn" data-rprev="2">Назад</button>
+            <div class="flex flex-wrap gap-2">
+              <button class="btn" data-r-save>Сохранить черновик</button>
+              <button class="btn btn-primary" data-rnext="4">К подтверждению</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card p-5 rflow" data-rflow="4" hidden>
+          <h4 class="sub-title">Подтверждение и ограничения</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+            <div class="protocol"><h5 class="sub-title" style="font-size:14px">Запись</h5><dl><dt>Год</dt><dd id="r-sum-year">2024</dd><dt>Регионов</dt><dd>85 (демо)</dd><dt>Исправлено вручную</dt><dd id="r-sum-fixed">0</dd><dt>Не исправлено</dt><dd id="r-sum-open">3</dd></dl></div>
+            <div class="protocol"><h5 class="sub-title" style="font-size:14px">Версия</h5><p class="hint">После подтверждения создаётся новая версия рейтинга за год со ссылкой на предыдущую (версия 3 от 14.02.2026, демо). Действующая версия остаётся в дашборде до подтверждения.</p></div>
+            <div class="protocol"><h5 class="sub-title" style="font-size:14px">Ограничения</h5><p class="hint">В рейтинге только итоги, баллы блоков и места. Значений показателей других регионов в PDF нет, детальное сравнение с лидерами по показателям невозможно.</p></div>
+          </div>
+          <div class="mt-3">
+            <label class="check"><input type="checkbox" id="r-check-1"> <span>Итоговые баллы и баллы блоков сверены с PDF.</span></label>
+            <label class="check"><input type="checkbox" id="r-check-2"> <span>Места сверены с PDF; непроверенные и исключённые строки не подменены нулём.</span></label>
+          </div>
+          <div id="r-saved" class="saved mt-3"></div>
+          <div class="flex flex-wrap gap-2 justify-between mt-5">
+            <button class="btn" data-rprev="3">Назад</button>
+            <div class="flex flex-wrap gap-2">
+              <button class="btn" data-r-save>Сохранить черновик</button>
+              <button class="btn btn-danger" id="r-cancel">Удалить черновик</button>
+              <button class="btn btn-primary" id="r-confirm" disabled>Подтвердить загрузку</button>
+            </div>
+          </div>
+          <p class="hint" id="r-confirm-hint">Кнопка станет доступна после двух отметок выше.</p>
+        </section>
+      </section>
+
       <section id="screen-update" class="hidden space-y-6">
 
         <div class="card p-5">
           <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div>
               <h3 class="screen-title">Обновление показателей</h3>
-              <p class="hint" style="margin-top:4px">Черновик не влияет на аналитику до подтверждения. Файлы в макете можно выбрать, но они не распознаются и не сохраняются.</p>
+              <p class="hint" style="margin-top:4px" id="draft-note">Черновик не влияет на аналитику до подтверждения: дашборд работает по действующим данным. Файлы в макете можно выбрать, но они не распознаются и не сохраняются.</p>
             </div>
-            <div class="flex flex-wrap gap-2 flex-shrink-0">
-              <span class="status status-info">Черновик · НСО · 2024</span>
-              <span class="status status-neutral">Версия не создана</span>
+            <div class="flex flex-wrap gap-2 flex-shrink-0 items-center">
+              <span class="status status-info" id="draft-badge">Черновик · НСО · 2024</span>
+              <span class="status status-neutral" id="version-badge">Версия не создана</span>
+              <button class="btn btn-sm" id="open-dashboard" type="button">Открыть дашборд</button>
             </div>
           </div>
+
           <div class="stepper mt-4" role="tablist" aria-label="Шаги обновления">
             <button class="step active" data-step="1" role="tab" aria-selected="true"><b>1</b>Период и файлы</button>
             <button class="step" data-step="2" role="tab" aria-selected="false"><b>2</b>Структура</button>
@@ -877,11 +1100,31 @@
             <button class="step" data-step="5" role="tab" aria-selected="false"><b>5</b>Расчёт и ограничения</button>
             <button class="step" data-step="6" role="tab" aria-selected="false"><b>6</b>Подтверждение</button>
           </div>
+          <div class="stepper mt-2" aria-label="Постоянные разделы">
+            <button class="step" data-step="dev" id="step-dev" type="button">Отклонения <span class="status status-warn" id="dev-count" style="margin-left:2px">0</span></button>
+            <button class="step" data-step="card" id="step-card" type="button" disabled>Карточка</button>
+          </div>
+
+          <div class="status-panel mt-4" role="group" aria-label="Панель статусов">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="sp-label">Значение:</span>
+              <span class="status status-ok">есть</span>
+              <span class="status status-neutral">н/д</span>
+              <span class="status status-warn">нет строки</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="sp-label">Балл:</span>
+              <span class="status status-ok">рассчитан</span>
+              <span class="status status-err">не рассчитан · причина</span>
+            </div>
+            <p class="hint" style="margin:0">Прочерк «—» — это статус, а не число. Ноль — допустимое значение, он не равен «н/д». Балл не подбирается.</p>
+          </div>
         </div>
 
+        <!-- 1. Выбор периода и загрузка -->
         <section class="card p-5 flow" data-flow="1">
-          <h4 class="sub-title">Период, тип обновления и два файла</h4>
-          <p class="hint">Для выбранного периода показывается действующая запись либо «нет данных». Новый черновик не меняет рабочие данные.</p>
+          <h4 class="sub-title">Выбор периода и загрузка двух файлов</h4>
+          <p class="hint">Для выбранного периода показывается действующая запись либо «Данных нет». Новый черновик не меняет рабочие данные.</p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div>
               <label class="field-label" for="upd-region">Регион</label>
@@ -889,14 +1132,25 @@
             </div>
             <div>
               <label class="field-label" for="upd-period">Отчётный год</label>
-              <select id="upd-period" class="field"><option>2024</option><option>2025</option></select>
+              <select id="upd-period" class="field"><option>2025</option><option selected>2024</option><option>2023</option><option>2022</option></select>
             </div>
             <div>
               <label class="field-label" for="upd-mode">Обновление</label>
-              <select id="upd-mode" class="field"><option>Исправить существующий период</option><option>Добавить новый период</option></select>
+              <select id="upd-mode" class="field"><option value="fix">Исправить существующий период</option><option value="new">Добавить новый период</option></select>
             </div>
           </div>
-          <div class="notice mt-4"><b>Текущая запись для 2024:</b> НСО · методика 2024, редакция 2 · подтверждена. <b>Для 2025:</b> нет данных. Для нового периода создаётся только черновик, прежняя запись остаётся действующей.</div>
+          <div class="notice mt-4" id="period-notice" aria-live="polite"></div>
+
+          <div class="table-wrap mt-4" style="max-height:none">
+            <table>
+              <caption class="sr-only">Действующие записи и черновики по периодам</caption>
+              <thead>
+                <tr><th>Период</th><th>Действующая запись</th><th>Черновик</th><th></th></tr>
+              </thead>
+              <tbody id="period-table"></tbody>
+            </table>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div>
               <p class="field-label">Таблица значений (.xlsx / .csv)</p>
@@ -904,9 +1158,20 @@
               <p class="file-meta" id="values-meta">Файл не выбран</p>
             </div>
             <div>
-              <p class="field-label">Методика (.pdf)</p>
-              <div class="drop" data-drop="method" tabindex="0" role="button" aria-describedby="method-meta">Выберите или перетащите файл методики<input id="method-file" type="file" accept=".pdf" hidden></div>
-              <p class="file-meta" id="method-meta">Файл не выбран</p>
+              <p class="field-label">Методика</p>
+              <div class="card-soft p-3" role="radiogroup" aria-label="Источник методики">
+                <label class="check" style="margin:0 0 8px"><input type="radio" name="method-mode" value="reuse" checked> <span id="method-reuse-label"></span></label>
+                <label class="check" style="margin:0"><input type="radio" name="method-mode" value="upload"> <span>Загрузить методику (.pdf): она изменилась или исправляется</span></label>
+              </div>
+              <div id="method-reuse-box" class="mt-2">
+                <label class="check"><input type="checkbox" id="method-same"> <span id="method-same-label"></span></label>
+                <p class="hint">Правила и формулы берутся из этой редакции без повторной загрузки. Параметры min/max привязаны к периоду и не переносятся сами: их подтверждает человек на шаге 4.</p>
+              </div>
+              <div id="method-upload-box" class="mt-2" hidden>
+                <div class="drop" data-drop="method" tabindex="0" role="button" aria-describedby="method-meta">Выберите или перетащите файл методики<input id="method-file" type="file" accept=".pdf" hidden></div>
+                <p class="file-meta" id="method-meta">Файл не выбран</p>
+                <p class="hint">Будет создана новая редакция методики. Если контрольная сумма файла совпадёт с действующей редакцией, программа предложит использовать её, а не создавать копию (в макете не проверяется).</p>
+              </div>
             </div>
           </div>
           <div class="flex flex-wrap gap-2 justify-between mt-5">
@@ -918,9 +1183,14 @@
           </div>
         </section>
 
+        <!-- 2. Сверка структуры -->
         <section class="card p-5 flow" data-flow="2" hidden>
           <h4 class="sub-title">Сверка структуры</h4>
-          <p class="hint">Программа показывает предпросмотр. Значения не исправляются автоматически: спорные места передаются человеку.</p>
+          <p class="hint">Предпросмотр строк и годов. Значения не исправляются автоматически: спорные места передаются человеку. Ноль — допустимое значение.</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <span class="status status-neutral">Годы в файле: 2024, 2021</span>
+            <span class="status status-neutral">Показаны 4 строки предпросмотра (демо)</span>
+          </div>
 
           <div class="error-summary mt-4" role="alert" tabindex="-1" id="err-summary-2">
             <h4><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4 15.2 14H.8z" fill="currentColor"/><path d="M7.2 5.6h1.6v4.2H7.2zM7.2 10.8h1.6v1.6H7.2z" fill="#fff"/></svg>3 проблемы требуют исправления</h4>
@@ -934,7 +1204,7 @@
           <div class="table-wrap mt-4">
             <table>
               <thead>
-                <tr><th class="col-num">№</th><th>Строка / показатель</th><th class="num">2024</th><th class="center">Ед.</th><th>Статус</th><th>Действие человека</th></tr>
+                <tr><th class="col-num">№</th><th>Строка файла</th><th class="num">Значение</th><th class="center">Ед.</th><th>Статус ячейки</th><th>Действие человека</th></tr>
               </thead>
               <tbody>
                 <tr id="row-01" tabindex="-1">
@@ -942,7 +1212,7 @@
                   <td>Числовой показатель</td>
                   <td class="num">0</td>
                   <td class="center">%</td>
-                  <td><span class="status-cell sc-ok" data-icon="ok">Ноль — допустимое значение</span></td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Ок · ноль допустим</span></td>
                   <td>Не требуется</td>
                 </tr>
                 <tr id="row-02" tabindex="-1" class="problem-warn">
@@ -959,7 +1229,7 @@
                   <td class="num">не число</td>
                   <td class="center">%</td>
                   <td><span class="status-cell sc-err" data-icon="err">Неверный формат</span></td>
-                  <td>Исправить в файле или указать «нет данных»</td>
+                  <td>Исправить в файле и загрузить заново или отметить «нет данных»</td>
                 </tr>
                 <tr id="row-04" tabindex="-1" class="problem-warn">
                   <td class="col-num num">04</td>
@@ -982,9 +1252,10 @@
           </div>
         </section>
 
+        <!-- 3. Сопоставление -->
         <section class="card p-5 flow" data-flow="3" hidden>
-          <h4 class="sub-title">Сопоставление строк</h4>
-          <p class="hint">Строка файла сопоставляется с показателем справочника. Похожие названия не связываются автоматически.</p>
+          <h4 class="sub-title">Сопоставление строк со справочником</h4>
+          <p class="hint">Строка файла сопоставляется с показателем справочника. Похожие названия не связываются автоматически. Источник и ответственный редактируются отдельно, в разделе 11.</p>
           <div class="table-wrap mt-4">
             <table>
               <thead>
@@ -995,18 +1266,23 @@
                   <td>Строка 01</td>
                   <td>Показатель № 1</td>
                   <td><span class="status-cell sc-ok" data-icon="ok">Совпало</span></td>
-                  <td>Принять</td>
+                  <td>Не требуется</td>
                 </tr>
-                <tr class="problem-warn">
+                <tr class="problem-warn" id="map-row-2">
                   <td>Строка 02 · другое название</td>
                   <td>Показатель № 2</td>
-                  <td><span class="status-cell sc-warn" data-icon="warn">Уточнить вручную</span></td>
-                  <td><button class="btn btn-sm" data-map>Подтвердить соответствие</button></td>
+                  <td class="map-status"><span class="status-cell sc-warn" data-icon="warn">Уточнить вручную</span></td>
+                  <td>
+                    <div class="flex flex-wrap gap-2">
+                      <button class="btn btn-sm" data-map>Подтвердить соответствие</button>
+                      <button class="btn btn-sm" data-rename>Переименовать</button>
+                    </div>
+                  </td>
                 </tr>
-                <tr class="problem-err">
+                <tr class="problem-err" id="map-row-new">
                   <td>Строка 03 · новый показатель</td>
                   <td><span class="na">нет данных</span></td>
-                  <td><span class="status-cell sc-err" data-icon="err">Не сопоставлено</span></td>
+                  <td class="map-status"><span class="status-cell sc-err" data-icon="err">Новый · не сопоставлен</span></td>
                   <td>
                     <div class="flex flex-wrap gap-2 items-center">
                       <button class="btn btn-sm" data-new-method>Новая методика</button>
@@ -1016,11 +1292,29 @@
                     </div>
                   </td>
                 </tr>
-                <tr class="problem-warn">
+                <tr>
+                  <td>Строка 05</td>
+                  <td>Показатель № 3</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Совпало</span></td>
+                  <td>Не требуется</td>
+                </tr>
+                <tr>
+                  <td>Строка 06</td>
                   <td>Показатель № 4</td>
-                  <td>Нет строки в файле</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Совпало</span></td>
+                  <td>Не требуется</td>
+                </tr>
+                <tr>
+                  <td>Строки 07–08</td>
+                  <td>Показатели № 6 и № 7</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Совпало</span></td>
+                  <td>Не требуется</td>
+                </tr>
+                <tr class="problem-warn">
+                  <td><span class="na">нет строки в файле</span></td>
+                  <td>Показатель № 5</td>
                   <td><span class="status-cell sc-warn" data-icon="warn">Нет строки</span></td>
-                  <td><button class="btn btn-sm" data-load-more>Догрузить</button> или сохранить без балла</td>
+                  <td><button class="btn btn-sm" data-load-more>Догрузить файл</button> или сохранить без значения и балла</td>
                 </tr>
               </tbody>
             </table>
@@ -1034,40 +1328,89 @@
           </div>
         </section>
 
+        <!-- 4. Правила баллов -->
         <section class="card p-5 flow" data-flow="4" hidden>
           <h4 class="sub-title">Правила начисления баллов</h4>
-          <p class="hint">Правило применяется только после проверки человеком. Не распознанный фрагмент не становится формулой автоматически.</p>
+          <div class="notice mt-3" id="rules-inherit" hidden></div>
+          <p class="hint">Правило применяется только после проверки человеком. Не распознанный фрагмент не становится формулой автоматически; min/max не подбираются и не восстанавливаются.</p>
           <div class="table-wrap mt-4">
-            <table>
+            <table id="rules-table">
               <thead>
-                <tr><th>Показатель</th><th>Тип</th><th>Правило / пункт методики</th><th>Статус</th><th>Решение</th></tr>
+                <tr><th>Показатель</th><th>Тип</th><th>Формула / шкала</th><th>Пункт методики</th><th>min / max (источник, период)</th><th>Статус</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Показатель № 1</td>
+                  <td>№ 1</td>
                   <td>да / нет</td>
-                  <td>Шкала указана в методике</td>
-                  <td><span class="status-cell sc-ok" data-icon="ok">Подтверждено</span></td>
+                  <td>Шкала да/нет из методики</td>
+                  <td>указан (демо)</td>
                   <td><span class="na">не требуется</span></td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Подтверждено</span></td>
                 </tr>
-                <tr class="problem-warn">
-                  <td>Показатель № 2</td>
-                  <td>числовой, min/max</td>
-                  <td>Нет min/max</td>
-                  <td><span class="status-cell sc-warn" data-icon="warn">Нет параметров</span></td>
-                  <td>Ввести источник, период и параметры</td>
+                <tr>
+                  <td>№ 4</td>
+                  <td>числовой</td>
+                  <td>Шкала из методики</td>
+                  <td>указан (демо)</td>
+                  <td><span class="na">не требуется</span></td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Подтверждено</span></td>
                 </tr>
-                <tr class="problem-err">
-                  <td>Показатель № 3</td>
+                <tr class="problem-err" data-rule-ind="3">
+                  <td>№ 3</td>
                   <td><span class="na">нет данных</span></td>
                   <td>Фрагмент не распознан</td>
-                  <td><span class="status-cell sc-err" data-icon="err">Нет правила</span></td>
-                  <td>Ручной ввод и повторная проверка</td>
+                  <td><span class="na">нет данных</span></td>
+                  <td><span class="na">нет данных</span></td>
+                  <td class="rule-status"><span class="status-cell sc-err" data-icon="err">Нет правила</span></td>
+                </tr>
+                <tr class="problem-warn" data-rule-ind="6">
+                  <td>№ 6</td>
+                  <td>числовой, min/max</td>
+                  <td>Формула по методике</td>
+                  <td>указан (демо)</td>
+                  <td>параметры не заданы</td>
+                  <td class="rule-status"><span class="status-cell sc-warn" data-icon="warn">Нет параметров</span></td>
+                </tr>
+                <tr>
+                  <td>№ 7</td>
+                  <td>числовой, min/max</td>
+                  <td>Формула по методике</td>
+                  <td>указан (демо)</td>
+                  <td>заданы · источник: методика 2024 · период: 2024 (демо)</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Подтверждено</span></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 items-end">
+
+          <h5 class="sub-title mt-5" style="font-size:14px">Ручной ввод и перепроверка правила</h5>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-3 items-end">
+            <div>
+              <label class="field-label" for="rule-ind">Показатель</label>
+              <select id="rule-ind" class="field"><option value="3">№ 3 · нет правила</option><option value="6">№ 6 · нет параметров</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="rule-type">Тип</label>
+              <select id="rule-type" class="field"><option value="num">числовой</option><option value="bin">да / нет</option></select>
+            </div>
+            <div>
+              <label class="field-label" for="rule-formula">Формула / шкала</label>
+              <input id="rule-formula" class="field" placeholder="Как записано в методике">
+            </div>
+            <div>
+              <label class="field-label" for="rule-clause">Пункт методики</label>
+              <input id="rule-clause" class="field" placeholder="Например: п. 4.2">
+            </div>
+          </div>
+          <div id="rule-minmax" class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-3 items-end">
+            <div>
+              <label class="field-label" for="rule-min">min (только если есть источник)</label>
+              <input id="rule-min" class="field" inputmode="decimal" placeholder="нет данных">
+            </div>
+            <div>
+              <label class="field-label" for="rule-max">max (только если есть источник)</label>
+              <input id="rule-max" class="field" inputmode="decimal" placeholder="нет данных">
+            </div>
             <div>
               <label class="field-label" for="rule-source">Источник min/max</label>
               <input id="rule-source" class="field" placeholder="Например: методика 2024, п. 4.2">
@@ -1076,79 +1419,130 @@
               <label class="field-label" for="rule-period">Период параметров</label>
               <input id="rule-period" class="field" placeholder="Например: 2024">
             </div>
-            <div>
-              <p class="field-label">Проверка человеком</p>
-              <button id="rule-check" class="btn">Подтвердить правило</button>
-            </div>
           </div>
+          <div class="flex flex-wrap gap-2 items-center mt-3">
+            <button id="rule-check" class="btn">Подтвердить правило</button>
+            <span class="hint" style="margin:0">Правило подтверждает человек. Смена min/max затрагивает баллы прошлых лет: см. «Отклонения».</span>
+          </div>
+
           <div class="flex flex-wrap gap-2 justify-between mt-5">
             <button class="btn" data-prev="3">Назад</button>
             <div class="flex flex-wrap gap-2">
               <button class="btn" data-save-draft>Сохранить черновик</button>
-              <button class="btn btn-primary" data-next="5">К расчёту и ограничениям</button>
+              <button class="btn btn-primary" data-next="5">К расчёту</button>
             </div>
           </div>
         </section>
 
+        <!-- 5. Расчёт и ограничения (включает просмотр до → после) -->
         <section class="card p-5 flow" data-flow="5" hidden>
           <h4 class="sub-title">Расчёт баллов и ограничения</h4>
-          <p class="hint">Значение берётся из файла без пересчёта. Балл показывается только при подтверждённом правиле и полном наборе параметров.</p>
+          <p class="hint">Значение берётся из файла без пересчёта. Балл считается только по подтверждённому правилу при полном наборе параметров; иначе «Не рассчитан» с причиной. Макет баллы не считает.</p>
           <div class="table-wrap mt-4">
-            <table>
+            <table id="calc-table">
               <thead>
-                <tr><th>Показатель</th><th class="num">Значение</th><th class="center">Ед.</th><th class="num">Балл</th><th>Статус балла</th></tr>
+                <tr><th>Показатель</th><th class="num">Значение</th><th class="center">Ед.</th><th>Статус значения</th><th class="num">Балл</th><th>Статус балла / причина</th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Показатель № 1</td>
-                  <td class="num">0</td>
-                  <td class="center">%</td>
+                <tr data-calc-ind="1">
+                  <td>№ 1</td>
+                  <td class="num">да</td>
+                  <td class="center">да/нет</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Есть</span></td>
                   <td class="num">100,0</td>
-                  <td><span class="status-cell sc-ok" data-icon="ok">Правило подтверждено</span></td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Рассчитан · правило подтверждено</span></td>
                 </tr>
-                <tr class="problem-warn">
-                  <td>Показатель № 2</td>
+                <tr class="problem-warn" data-calc-ind="2">
+                  <td>№ 2</td>
                   <td class="num">—</td>
                   <td class="center">%</td>
+                  <td><span class="status-cell sc-neutral" data-icon="neutral">н/д</span></td>
                   <td class="num">—</td>
-                  <td><span class="status-cell sc-warn" data-icon="warn">Нет данных</span></td>
+                  <td><span class="status-cell sc-warn" data-icon="warn">Не рассчитан · н/д</span></td>
                 </tr>
-                <tr class="problem-warn">
-                  <td>Показатель № 3</td>
-                  <td class="num">12</td>
+                <tr class="problem-err" data-calc-ind="3">
+                  <td>№ 3</td>
+                  <td class="num">7</td>
                   <td class="center">%</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Есть</span></td>
                   <td class="num">—</td>
-                  <td><span class="status-cell sc-warn" data-icon="warn">Нет min/max</span></td>
+                  <td class="calc-reason"><span class="status-cell sc-err" data-icon="err">Не рассчитан · нет правила</span></td>
                 </tr>
-                <tr class="problem-err">
-                  <td>Показатель № 4</td>
+                <tr class="problem-err" data-calc-ind="4">
+                  <td>№ 4</td>
                   <td class="num">5</td>
                   <td class="center">ед.</td>
+                  <td><span class="status-cell sc-err" data-icon="err">Единица не совпала</span></td>
                   <td class="num">—</td>
-                  <td><span class="status-cell sc-err" data-icon="err">Единица не совпала · подтверждение значения заблокировано</span></td>
+                  <td><span class="status-cell sc-err" data-icon="err">Подтверждение значения заблокировано</span></td>
+                </tr>
+                <tr class="problem-warn" data-calc-ind="5">
+                  <td>№ 5</td>
+                  <td class="num">—</td>
+                  <td class="center">—</td>
+                  <td><span class="status-cell sc-warn" data-icon="warn">Нет строки</span></td>
+                  <td class="num">—</td>
+                  <td><span class="status-cell sc-warn" data-icon="warn">Не рассчитан · нет строки</span></td>
+                </tr>
+                <tr class="problem-warn" data-calc-ind="6">
+                  <td>№ 6</td>
+                  <td class="num">12</td>
+                  <td class="center">%</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Есть</span></td>
+                  <td class="num">—</td>
+                  <td class="calc-reason"><span class="status-cell sc-warn" data-icon="warn">Не рассчитан · нет min/max</span></td>
+                </tr>
+                <tr class="problem-warn" data-calc-ind="7">
+                  <td>№ 7</td>
+                  <td class="num">3,1</td>
+                  <td class="center">%</td>
+                  <td><span class="status-cell sc-ok" data-icon="ok">Есть</span></td>
+                  <td class="num">—</td>
+                  <td><span class="status-cell sc-warn" data-icon="warn">Не рассчитан · вне диапазона</span></td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <h5 class="sub-title mt-5" style="font-size:14px">Просмотр: до → после</h5>
+          <p class="hint">«До» — действующая версия (она остаётся в дашборде), «после» — черновик. Значения демонстрационные.</p>
+          <div class="table-wrap mt-3">
+            <table>
+              <thead>
+                <tr><th>Показатель</th><th class="num">Значение до</th><th class="num">Значение после</th><th class="num">Балл до</th><th class="num">Балл после</th><th>Что изменилось</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>№ 1</td><td class="num">да</td><td class="num">да</td><td class="num">100,0</td><td class="num">100,0</td><td>Без изменений</td></tr>
+                <tr><td>№ 2</td><td class="num">9,8</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td>Значение стало «н/д»; ноль не подставлен</td></tr>
+                <tr><td>№ 3</td><td class="num">6,5</td><td class="num">7</td><td class="num">—</td><td class="num">—</td><td>Значение изменилось; балл не рассчитан: нет правила</td></tr>
+                <tr><td>№ 6</td><td class="num">—</td><td class="num">12</td><td class="num">—</td><td class="num">—</td><td>Появилось значение; балл не рассчитан: нет min/max</td></tr>
+              </tbody>
+            </table>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div class="protocol">
-              <h5 class="sub-title" style="font-size:14px">Протокол расчёта</h5>
-              <dl>
-                <dt>Правило</dt><dd>подтверждённое правило</dd>
-                <dt>Входное значение</dt><dd>0</dd>
-                <dt>Промежуточный расчёт</dt><dd>см. правило</dd>
-                <dt>Округление</dt><dd>по методике</dd>
-                <dt>Результат</dt><dd>рассчитан</dd>
-              </dl>
+              <div class="flex flex-wrap items-end justify-between gap-2">
+                <h5 class="sub-title" style="font-size:14px">Протокол расчёта</h5>
+                <div>
+                  <label class="field-label" for="proto-sel" style="font-size:11px">Показатель</label>
+                  <select id="proto-sel" class="field" style="min-height:34px; padding:6px 10px; font-size:12px;">
+                    <option value="1">№ 1 · рассчитан</option>
+                    <option value="2">№ 2 · н/д</option>
+                    <option value="4">№ 4 · единица не совпала</option>
+                    <option value="6">№ 6 · нет min/max</option>
+                  </select>
+                </div>
+              </div>
+              <dl id="proto-box"></dl>
             </div>
             <div class="protocol">
-              <h5 class="sub-title" style="font-size:14px">До → после</h5>
-              <p class="hint"><b style="color: var(--text)">Действующая версия:</b> без изменений до подтверждения.</p>
-              <p class="hint"><b style="color: var(--text)">Черновик:</b> есть значения и причины отсутствия баллов. Официальный итоговый балл региона не рассчитывается.</p>
-              <p class="hint"><b style="color: var(--text)">Ограничение:</b> расчёт показателя не равен официальному итоговому результату рейтинга.</p>
+              <h5 class="sub-title" style="font-size:14px">Ограничения</h5>
+              <p class="hint"><b style="color: var(--text)">Не официальный итог.</b> Расчёт по показателю не равен итоговому баллу рейтинга. Итоговый балл региона и внешний рейтинг в макете не рассчитываются.</p>
+              <p class="hint"><b style="color: var(--text)">Прошлые годы.</b> Пересчёт баллов затронутых лет при изменении min/max в макете не выполняется: см. «Отклонения».</p>
+              <p class="hint"><b style="color: var(--text)">Дашборд.</b> До подтверждения показывает «до».</p>
             </div>
           </div>
-          <div class="notice mt-4"><b>Балл не рассчитан, если:</b> нет правила, нет min/max, нет данных, нет строки или значение вне диапазона. Пересчёт прошлых лет в макете не выполняется.</div>
+          <div class="notice mt-4"><b>Причины «Не рассчитан»:</b> нет правила · нет параметра · нет min/max · вне диапазона · н/д · нет строки. Значения при этом сохраняются, балл не подбирается. Значения в таблице демонстрационные.</div>
           <div class="flex flex-wrap gap-2 justify-between mt-5">
             <button class="btn" data-prev="4">Назад</button>
             <div class="flex flex-wrap gap-2">
@@ -1158,21 +1552,27 @@
           </div>
         </section>
 
+        <!-- 6. Подтверждение -->
         <section class="card p-5 flow" data-flow="6" hidden>
           <h4 class="sub-title">Подтверждение</h4>
-          <p class="hint">Значения можно сохранить без балла. Причина видна до подтверждения.</p>
+          <p class="hint">Значения можно подтвердить без балла: причина отсутствия балла видна заранее. Блокируется только подтверждение значения с несовпавшей единицей.</p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div class="protocol">
               <h5 class="sub-title" style="font-size:14px">Запись</h5>
-              <dl><dt>Регион</dt><dd>Новосибирская область</dd><dt>Период</dt><dd>2024</dd><dt>Методика</dt><dd>черновик</dd></dl>
+              <dl><dt>Регион</dt><dd>Новосибирская область</dd><dt>Период</dt><dd id="sum-period">2024</dd><dt>Методика</dt><dd id="sum-method"></dd></dl>
             </div>
             <div class="protocol">
-              <h5 class="sub-title" style="font-size:14px">Статусы</h5>
-              <dl><dt>Значения</dt><dd>есть / нет данных / нет строки</dd><dt>Балл</dt><dd>рассчитан / не рассчитан с причиной</dd></dl>
+              <h5 class="sub-title" style="font-size:14px">Сводка (демо)</h5>
+              <dl>
+                <dt>Значения</dt><dd>есть — 4 · н/д — 1 · нет строки — 1</dd>
+                <dt>Не подтверждается</dt><dd>1 (единица не совпала)</dd>
+                <dt>Балл</dt><dd>рассчитан — 1 · не рассчитан — 5</dd>
+                <dt>Открытых отклонений</dt><dd id="sum-dev">0</dd>
+              </dl>
             </div>
             <div class="protocol">
               <h5 class="sub-title" style="font-size:14px">Версия</h5>
-              <p class="hint">После подтверждения создаётся новая версия со ссылкой на предыдущую.</p>
+              <p class="hint">После подтверждения создаётся новая версия со ссылкой на предыдущую (версия 2 от 12.02.2026, демо).</p>
             </div>
           </div>
           <div class="mt-3">
@@ -1192,17 +1592,68 @@
           <p class="hint" id="confirm-hint">Кнопка станет доступна после трёх отметок выше.</p>
         </section>
 
-        <div class="card p-5">
-          <h4 class="sub-title" style="font-size:14px">Обозначения статусов</h4>
-          <div class="flex flex-wrap items-center gap-2 mt-2">
-            <span class="status status-ok">Рассчитан</span>
-            <span class="status status-warn">Уточнить</span>
-            <span class="status status-err">Не рассчитан</span>
-            <span class="status status-info">Черновик · 2024</span>
-            <span class="status status-neutral">Распознано 82 из 85</span>
+        <!-- Отклонения (доступны на любом шаге) -->
+        <section class="card p-5 flow" data-flow="dev" hidden>
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div>
+              <h4 class="sub-title">Отклонения</h4>
+              <p class="hint">Всё, что требует решения человека, собрано в одном месте. Автоисправлений нет.</p>
+            </div>
+            <button class="btn btn-sm" id="dev-export" type="button">Скачать список отклонений</button>
           </div>
-          <p class="hint">Прочерк — балл не рассчитан. Курсив «нет данных» — значения нет. Ноль — допустимое значение, он не равен пропуску.</p>
-        </div>
+          <div class="table-wrap mt-4" style="max-height:none">
+            <table>
+              <thead>
+                <tr><th>Тип</th><th>Где</th><th>Описание</th><th>Состояние</th><th>Действие</th></tr>
+              </thead>
+              <tbody id="dev-body"></tbody>
+            </table>
+          </div>
+          <div class="notice mt-4"><b>Расхождение с прошлыми годами.</b> Порог «значительного» расхождения заказчиком не задан, поэтому показывается без порога, решает человек. Если изменить min/max, баллы затронутых лет нужно пересчитывать: в макете это не выполняется.</div>
+          <div class="flex flex-wrap gap-2 justify-between mt-5">
+            <button class="btn" id="dev-back" type="button">Вернуться к шагу</button>
+            <button class="btn" data-save-draft>Сохранить черновик</button>
+          </div>
+        </section>
+
+        <!-- Карточка (после подтверждения) -->
+        <section class="card p-5 flow" data-flow="card" hidden>
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div>
+              <h4 class="sub-title">Карточка загрузки</h4>
+              <p class="hint">Карточка доступна после подтверждения.</p>
+            </div>
+            <span class="status status-ok" id="card-saved">Сохранено</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div class="protocol">
+              <dl>
+                <dt>Регион</dt><dd>Новосибирская область</dd>
+                <dt>Период</dt><dd id="card-period">2024</dd>
+                <dt>Редакция методики</dt><dd id="card-method"></dd>
+                <dt>Подтвердил</dt><dd id="card-who">—</dd>
+                <dt>Когда</dt><dd id="card-when">—</dd>
+              </dl>
+            </div>
+            <div class="protocol">
+              <h5 class="sub-title" style="font-size:14px">Версия</h5>
+              <p class="hint">Создана версия 3. Предыдущая — версия 2 от 12.02.2026 (демо).</p>
+              <div class="flex flex-wrap gap-2 mt-3">
+                <button class="btn btn-sm" id="card-prev" type="button">Открыть предыдущую версию</button>
+                <button class="btn btn-sm btn-primary" id="card-dashboard" type="button">Открыть дашборд</button>
+              </div>
+            </div>
+          </div>
+          <div class="table-wrap mt-4" style="max-height:none">
+            <table>
+              <thead>
+                <tr><th>Показатель</th><th class="num">Значение</th><th class="center">Ед.</th><th>Статус значения</th><th class="num">Балл</th><th>Статус балла / причина</th></tr>
+              </thead>
+              <tbody id="card-body"></tbody>
+            </table>
+          </div>
+        </section>
+
       </section>
 
       <section id="screen-sources" class="hidden space-y-6">
@@ -1476,7 +1927,7 @@ const TT = {
 };
 
 const ANALYTICS_TABS = ['profile','gaps','cheap','details','dynamics','regions','local'];
-const ADMIN_TABS = ['update','sources'];
+const ADMIN_TABS = ['home','rating','update','sources'];
 const TABS = [...ANALYTICS_TABS, ...ADMIN_TABS];
 function switchTab(tabId){
   TABS.forEach(t => {
@@ -2480,24 +2931,156 @@ function printReport(){
     return String(x).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   }
 
+  /* ---------------- периоды: действующие записи и черновики (демо) ---------------- */
+  const PERIODS = {
+    '2025': { current: null, draft: null, method: null },
+    '2024': { current: 'версия 2 · методика 2024, редакция 2 · 12.02.2026', draft: 'Черновик НСО · 2024', method: '2024, ред. 2' },
+    '2023': { current: 'версия 1 · методика 2023 · 15.02.2025', draft: null, method: '2023, ред. 1' },
+    '2022': { current: 'версия 1 · методика 2022 · 20.01.2024', draft: null, method: '2022, ред. 1' }
+  };
+  const periodSel = document.getElementById('upd-period');
+  const modeSel = document.getElementById('upd-mode');
+  function renderPeriods(){
+    const y = periodSel.value, rec = PERIODS[y];
+    modeSel.querySelector('option[value="fix"]').disabled = !rec.current;
+    modeSel.querySelector('option[value="new"]').disabled = !!rec.current;
+    modeSel.value = rec.current ? 'fix' : 'new';
+    document.getElementById('period-notice').innerHTML = rec.current
+      ? '<b>Текущая запись для ' + y + ':</b> НСО · ' + rec.current + ' · подтверждена. Исправление создаёт черновик, действующая запись остаётся в дашборде до подтверждения.'
+      : '<b>Для ' + y + ':</b> <span class="na">Данных нет</span>. Для нового периода создаётся только черновик.';
+    if (!confirmed) document.getElementById('draft-badge').textContent = 'Черновик · НСО · ' + y;
+    document.getElementById('sum-period').textContent = y;
+    document.getElementById('card-period').textContent = y;
+    renderMethod();
+    document.getElementById('period-table').innerHTML = Object.keys(PERIODS).map(k => {
+      const r = PERIODS[k];
+      return '<tr><td><b>' + k + '</b></td>'
+        + '<td>' + (r.current ? r.current : '<span class="na">Данных нет</span>') + '</td>'
+        + '<td>' + (r.draft ? '<span class="status status-info">' + r.draft + '</span>' : '<span class="na">нет черновика</span>') + '</td>'
+        + '<td><button class="btn btn-sm" type="button" data-pick="' + k + '"' + (k === y ? ' disabled' : '') + '>' + (k === y ? 'Выбран' : 'Выбрать') + '</button></td></tr>';
+    }).join('');
+    document.querySelectorAll('#period-table [data-pick]').forEach(b => b.addEventListener('click', () => {
+      periodSel.value = b.dataset.pick; renderPeriods();
+    }));
+  }
+  periodSel.addEventListener('change', renderPeriods);
+
+  /* ---------------- методика: использовать действующую или загрузить новую ---------------- */
+  const methodRadios = [...document.querySelectorAll('input[name="method-mode"]')];
+  const methodSame = document.getElementById('method-same');
+  const methodMode = () => methodRadios.find(r => r.checked).value;
+  // Основание: редакция самого периода или последняя подтверждённая редакция более раннего года.
+  function methodBasis(y){
+    const ys = Object.keys(PERIODS).filter(k => k <= y && PERIODS[k].method).sort();
+    return ys.length ? { year: ys[ys.length - 1], name: PERIODS[ys[ys.length - 1]].method } : null;
+  }
+  function methodDesc(){
+    const b = methodBasis(periodSel.value);
+    if (methodMode() === 'reuse' && b) return 'редакция ' + b.name + ' · не менялась, повторно не загружалась';
+    return 'новая редакция из загруженного файла (' + periodSel.value + ')';
+  }
+  function renderMethod(){
+    const y = periodSel.value, b = methodBasis(y);
+    const reuseRadio = methodRadios.find(r => r.value === 'reuse');
+    reuseRadio.disabled = !b;
+    if (!b) methodRadios.find(r => r.value === 'upload').checked = true;
+    document.getElementById('method-reuse-label').textContent = b
+      ? 'Методика не менялась: использовать подтверждённую редакцию ' + b.name
+      : 'Подтверждённой методики нет: загрузите файл';
+    document.getElementById('method-same-label').textContent = b
+      ? (b.year === y ? 'Подтверждаю: методика ' + y + ' остаётся без правок (редакция ' + b.name + ').'
+                      : 'Подтверждаю: методика ' + y + ' не менялась по сравнению с ' + b.name + ' (сверено с источником).')
+      : '';
+    const reuse = methodMode() === 'reuse';
+    document.getElementById('method-reuse-box').hidden = !reuse;
+    document.getElementById('method-upload-box').hidden = reuse;
+    const inh = document.getElementById('rules-inherit');
+    inh.hidden = !reuse;
+    if (b) inh.innerHTML = '<b>Правила взяты из редакции ' + b.name + '</b> без повторной загрузки методики. Проверьте только показатели без правила и параметры min/max за ' + y + '.';
+    document.getElementById('sum-method').textContent = methodDesc();
+    document.getElementById('card-method').textContent = methodDesc();
+  }
+  methodRadios.forEach(r => r.addEventListener('change', renderMethod));
+
+  /* ---------------- отклонения ---------------- */
+  const DEVS = [
+    { id: 'd1',  type: 'Пустая ячейка',          where: 'Строка 02 · шаг 2', step: 2, text: 'Ячейка пуста: это не ноль. Нужно решение человека.' },
+    { id: 'd2',  type: 'Неверный формат',        where: 'Строка 03 · шаг 2', step: 2, text: 'Значение не число. Исправить в файле или отметить «нет данных».' },
+    { id: 'd3',  type: 'Подозрительный год',     where: 'Строка 04 · шаг 2', step: 2, text: 'В файле год 2021, ожидался отчётный год.' },
+    { id: 'd4',  type: 'Новый показатель',       where: 'Строка 03 · шаг 3', step: 3, text: 'Показателя нет в справочнике: исключить с обоснованием или загрузить новую методику.' },
+    { id: 'd5',  type: 'Не хватает показателей', where: 'Файл · шаг 3', step: 3, text: 'Часть показателей справочника не найдена в файле.', ack: true },
+    { id: 'd6',  type: 'Нет строки',             where: 'Показатель № 5 · шаг 3', step: 3, text: 'В файле нет строки. Догрузить или сохранить без значения и балла.', ack: true },
+    { id: 'd7',  type: 'Единица не совпала',     where: 'Показатель № 4 · шаг 5', step: 5, text: 'Единица в файле («ед.») не совпала со справочником. Подтверждение значения заблокировано.' },
+    { id: 'd8',  type: 'н/д',                    where: 'Показатель № 2 · шаг 5', step: 5, text: 'Значение «нет данных», балл не рассчитан.', ack: true },
+    { id: 'd9',  type: 'Нет min/max',            where: 'Показатель № 6 · шаг 4', step: 4, text: 'Параметры min/max не заданы: балл не рассчитывается.' },
+    { id: 'd10', type: 'Вне диапазона',          where: 'Показатель № 7 · шаг 5', step: 5, text: 'Значение вне диапазона min/max, балл не рассчитан.', ack: true },
+    { id: 'd11', type: 'Расхождение с прошлыми годами', where: 'Показатель № 3 · шаг 5', step: 5, text: 'Значение за 2024 отличается от 2023. Порог не задан заказчиком, решает человек.', ack: true },
+    { id: 'd12', type: 'Изменение min/max',      where: 'Шаг 4', step: 4, text: 'Новые min/max затрагивают баллы прошлых лет. Пересчёт затронутых лет нужно подтвердить; в макете он не выполняется.', ack: true, hidden: true }
+  ];
+  const devState = {};
+  function resolveDev(id, how){ devState[id] = how || 'Решено'; renderDevs(); }
+  function showDev(id){ const d = DEVS.find(x => x.id === id); if (d) d.hidden = false; renderDevs(); }
+  function openDevs(){ return DEVS.filter(d => !d.hidden && !devState[d.id]); }
+  function renderDevs(){
+    const body = document.getElementById('dev-body');
+    body.innerHTML = DEVS.filter(d => !d.hidden).map(d => {
+      const st = devState[d.id];
+      return '<tr' + (st ? '' : ' class="problem-warn"') + '>'
+        + '<td>' + d.type + '</td><td>' + d.where + '</td><td>' + d.text + '</td>'
+        + '<td>' + (st ? '<span class="status-cell sc-ok" data-icon="ok">' + escapeHtml(st) + '</span>' : '<span class="status-cell sc-warn" data-icon="warn">Открыто</span>') + '</td>'
+        + '<td><div class="flex flex-wrap gap-2">'
+        + '<button class="btn btn-sm" type="button" data-dev-go="' + d.step + '">К шагу ' + d.step + '</button>'
+        + (d.ack && !st ? '<button class="btn btn-sm" type="button" data-dev-ack="' + d.id + '">Принять к сведению</button>' : '')
+        + '</div></td></tr>';
+    }).join('');
+    applyIcons(body);
+    body.querySelectorAll('[data-dev-go]').forEach(b => b.addEventListener('click', () => goStep(+b.dataset.devGo)));
+    body.querySelectorAll('[data-dev-ack]').forEach(b => b.addEventListener('click', () => {
+      resolveDev(b.dataset.devAck, 'Принято к сведению');
+      toast('Отклонение принято к сведению. Статус «не рассчитан» и его причина сохраняются.');
+    }));
+    const n = openDevs().length;
+    const c = document.getElementById('dev-count');
+    c.textContent = n;
+    c.className = 'status ' + (n ? 'status-warn' : 'status-ok');
+    document.getElementById('sum-dev').textContent = n;
+    renderDrafts();
+  }
+  document.getElementById('dev-export').addEventListener('click', () => toast('В макете список отклонений не формируется.'));
+
   /* ---------------- шаги мастера ---------------- */
   const flows = [...document.querySelectorAll('#screen-update .flow')];
   const adminSteps = [...document.querySelectorAll('#screen-update .step')];
+  let currentStep = 1, confirmed = false;
 
   function goStep(n){
-    flows.forEach(f => { f.hidden = +f.dataset.flow !== n; });
+    const key = String(n);
+    const numericKey = /^\d+$/.test(key);
+    if (numericKey) currentStep = +key;   // «Отклонения» и «Карточка» текущий шаг не меняют
+    flows.forEach(f => { f.hidden = f.dataset.flow !== key; });
     adminSteps.forEach(b => {
-      const k = +b.dataset.step;
-      b.classList.toggle('active', k === n);
-      b.classList.toggle('done', k < n);
-      b.setAttribute('aria-selected', String(k === n));
+      const k = b.dataset.step;
+      const active = k === key;
+      b.classList.toggle('active', active);
+      b.classList.toggle('done', numericKey && /^\d+$/.test(k) && +k < +key);
+      b.setAttribute('aria-selected', String(active));
     });
-    const target = flows.find(f => +f.dataset.flow === n);
+    const target = flows.find(f => f.dataset.flow === key);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderDrafts();
   }
-  adminSteps.forEach(b => b.addEventListener('click', () => goStep(+b.dataset.step)));
+  adminSteps.forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.step;
+    goStep(/^\d+$/.test(k) ? +k : k);
+  }));
   document.querySelectorAll('#screen-update [data-next]').forEach(b => b.addEventListener('click', () => {
     const n = +b.dataset.next;
+    if (currentStep === 1 && n === 2 && methodMode() === 'reuse' && !methodSame.checked){
+      methodSame.setAttribute('aria-invalid', 'true'); methodSame.focus();
+      toast('Подтвердите, что методика не менялась, либо загрузите новую методику.');
+      return;
+    }
+    methodSame.removeAttribute('aria-invalid');
     goStep(n);
     // Слой 5: при переходе на шаг с ошибками — автофокус на сводке ошибок.
     if (n === 2) setTimeout(() => {
@@ -2506,6 +3089,32 @@ function printReport(){
     }, 320);
   }));
   document.querySelectorAll('#screen-update [data-prev]').forEach(b => b.addEventListener('click', () => goStep(+b.dataset.prev)));
+  document.getElementById('dev-back').addEventListener('click', () => goStep(currentStep));
+
+  /* «Открыть дашборд»: показывает действующие данные, черновик не учитывается */
+  function openDashboard(){
+    switchTab('profile');
+    toast(confirmed ? 'Дашборд показывает подтверждённую версию 3.' : 'Дашборд показывает действующие данные. Черновик в аналитике не учитывается.');
+  }
+  document.getElementById('open-dashboard').addEventListener('click', openDashboard);
+  document.getElementById('card-dashboard').addEventListener('click', openDashboard);
+  document.getElementById('card-prev').addEventListener('click', () => toast('В макете предыдущая версия не открывается.'));
+
+  /* протокол расчёта по показателю (шаг 6) */
+  const PROTOCOLS = {
+    '1': ['Шкала да/нет из методики (демо)', 'да', '—', 'как в методике (демо)', 'Рассчитан: 100,0'],
+    '2': ['Правило не применяется', 'н/д (пустая ячейка)', '—', '—', 'Не рассчитан: н/д'],
+    '4': ['Шкала из методики', '5 ед.; ожидается %', '—', '—', 'Не рассчитан: единица не совпала, значение не подтверждается'],
+    '6': ['Формула из правила методики', '12 %', 'min и max не заданы', '—', 'Не рассчитан: нет min/max']
+  };
+  const protoSel = document.getElementById('proto-sel');
+  function renderProto(){
+    const p = PROTOCOLS[protoSel.value];
+    document.getElementById('proto-box').innerHTML =
+      '<dt>Формула / правило</dt><dd>' + p[0] + '</dd><dt>Входные данные</dt><dd>' + p[1] + '</dd>'
+      + '<dt>Промежуточные</dt><dd>' + p[2] + '</dd><dt>Округление</dt><dd>' + p[3] + '</dd><dt>Результат</dt><dd>' + p[4] + '</dd>';
+  }
+  protoSel.addEventListener('change', renderProto);
 
   /* ---------------- toast с отменой ---------------- */
   const toastHost = document.getElementById('toast-host');
@@ -2569,6 +3178,7 @@ function printReport(){
   let draftSavedAt = null;
   document.querySelectorAll('#screen-update [data-save-draft]').forEach(btn => {
     btn.addEventListener('click', () => {
+      markDraft('update');
       const prev = draftSavedAt;
       draftSavedAt = new Date().toLocaleString('ru-RU', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
       toast('Черновик сохранён · ' + draftSavedAt + '. Рабочие данные не изменены.', () => {
@@ -2579,7 +3189,8 @@ function printReport(){
   });
   document.querySelectorAll('#screen-update [data-cancel]').forEach(btn => {
     btn.addEventListener('click', () => {
-      openModal('Удалить черновик?', 'Черновик «НСО · 2024» будет удалён. Действующие данные и аналитика не пострадают.', 'Удалить черновик', () => {
+      openModal('Удалить черновик?', 'Черновик «НСО · ' + periodSel.value + '» будет удалён. Действующие данные и аналитика не пострадают.', 'Удалить черновик', () => {
+        drafts.update = false;
         goStep(1);
         toast('Черновик удалён. Аналитика работает на подтверждённой версии.', () => {
           toast('Черновик восстановлен.');
@@ -2589,7 +3200,7 @@ function printReport(){
   });
 
   /* ---------------- файлы ---------------- */
-  document.querySelectorAll('#screen-update .drop').forEach(drop => {
+  document.querySelectorAll('#screen-update .drop, #screen-rating .drop').forEach(drop => {
     const input = drop.querySelector('input[type="file"]');
     const meta = document.getElementById(drop.dataset.drop + '-meta');
     drop.addEventListener('click', () => input.click());
@@ -2614,7 +3225,8 @@ function printReport(){
         + '<br>Контрольная сумма SHA-256: <code>' + hash + '</code>';
       drop.classList.add('is-loaded');
       [...drop.childNodes].filter(n => n.nodeType === 3).forEach(n => { n.textContent = 'Заменить файл'; });
-      toast('Файл выбран: ' + file.name + '. В макете он не распознаётся.');
+      if (drop.dataset.drop !== 'rating') markDraft('update');
+      toast('Файл выбран: ' + file.name + (drop.dataset.drop === 'rating' ? '. В макете файл не читается: показан пример результата.' : '. В макете он не распознаётся.'));
     }
   });
 
@@ -2625,6 +3237,7 @@ function printReport(){
       const statusCell = row.querySelectorAll('td')[4];
       statusCell.innerHTML = '<span class="status-cell sc-neutral" data-icon="neutral">Нет данных</span>';
       applyIcons(statusCell);
+      resolveDev('d1', 'Отмечено «нет данных»');
       row.classList.remove('problem-warn');
       btn.disabled = true;
       btn.textContent = 'Отмечено';
@@ -2635,6 +3248,10 @@ function printReport(){
     btn.addEventListener('click', () => {
       btn.disabled = true;
       btn.textContent = 'Сопоставлено вручную';
+      const st = document.querySelector('#map-row-2 .map-status');
+      st.innerHTML = '<span class="status-cell sc-ok" data-icon="ok">Вручную</span>';
+      applyIcons(st);
+      document.getElementById('map-row-2').classList.remove('problem-warn');
       toast('Соответствие подтверждено вручную. Строка переходит в черновик.');
     });
   });
@@ -2649,24 +3266,72 @@ function printReport(){
       }
       input.removeAttribute('aria-invalid');
       openModal('Исключить строку?', 'Строка 03 будет исключена из черновика. Обоснование: «' + reason + '». В макете строка не удаляется.', 'Исключить строку', () => {
-        toast('Строка исключена из черновика.');
+        const st = document.querySelector('#map-row-new .map-status');
+        st.innerHTML = '<span class="status-cell sc-neutral" data-icon="neutral">Исключено</span>';
+        applyIcons(st);
+        document.getElementById('map-row-new').classList.remove('problem-err');
+        resolveDev('d4', 'Исключено: ' + reason);
+        toast('Строка исключена из черновика. Обоснование сохранено.');
       });
     });
   });
-  document.querySelectorAll('#screen-update [data-new-method]').forEach(btn => btn.addEventListener('click', () => goStep(4)));
-  document.querySelectorAll('#screen-update [data-load-more]').forEach(btn => btn.addEventListener('click', () => goStep(1)));
+  document.querySelectorAll('#screen-update [data-new-method]').forEach(btn => btn.addEventListener('click', () => {
+    methodRadios.find(r => r.value === 'upload').checked = true; renderMethod();
+    goStep(1);
+    toast('Загрузите методику, в которой есть этот показатель. Новая запись появится в сопоставлении.');
+  }));
+  document.querySelectorAll('#screen-update [data-load-more]').forEach(btn => btn.addEventListener('click', () => {
+    goStep(1);
+    toast('Загрузите дополненную таблицу значений.');
+  }));
+  document.querySelectorAll('#screen-update [data-rename]').forEach(btn => btn.addEventListener('click', () => {
+    openModal('Переименовать строку', 'Название строки файла «Строка 02» будет приведено к названию показателя № 2 из справочника. В макете файл не меняется.', 'Понятно', null);
+  }));
 
+  const ruleInd = document.getElementById('rule-ind');
   const ruleCheck = document.getElementById('rule-check');
-  const ruleSource = document.getElementById('rule-source');
+  const ruleType = document.getElementById('rule-type');
+  const ruleMinmax = document.getElementById('rule-minmax');
+  const ruleFields = ['rule-formula', 'rule-clause', 'rule-min', 'rule-max', 'rule-source', 'rule-period'].map(id => document.getElementById(id));
+  const bad = (el, msg) => { el.setAttribute('aria-invalid', 'true'); el.focus(); toast(msg); };
+  ruleType.addEventListener('change', () => { ruleMinmax.style.display = ruleType.value === 'num' ? '' : 'none'; });
   if (ruleCheck) ruleCheck.addEventListener('click', () => {
-    if (ruleSource && !ruleSource.value.trim()){
-      ruleSource.setAttribute('aria-invalid', 'true');
-      ruleSource.focus();
-      toast('Укажите источник min/max: без него правило не подтвердить.');
-      return;
+    ruleFields.forEach(f => f.removeAttribute('aria-invalid'));
+    const [formula, clause, min, max, source, period] = ruleFields;
+    const isNum = ruleType.value === 'num';
+    const ind = ruleInd.value;
+    if (!formula.value.trim()) return bad(formula, 'Укажите формулу или шкалу из методики.');
+    if (!clause.value.trim()) return bad(clause, 'Укажите пункт методики: без ссылки правило не подтвердить.');
+    // Для показателя № 6 (min/max) параметры обязательны; для остальных проверяем, только если введены.
+    const needMinMax = isNum && (ind === '6' || min.value.trim() || max.value.trim());
+    if (needMinMax){
+      const nmin = parseFloat(min.value.replace(',', '.')), nmax = parseFloat(max.value.replace(',', '.'));
+      if (isNaN(nmin)) return bad(min, 'Укажите min числом.');
+      if (isNaN(nmax)) return bad(max, 'Укажите max числом.');
+      if (nmin >= nmax) return bad(max, 'min должен быть меньше max.');
+      if (!source.value.trim()) return bad(source, 'Укажите источник min/max: без него правило не подтвердить.');
+      if (!period.value.trim()) return bad(period, 'Укажите период параметров min/max.');
     }
-    if (ruleSource) ruleSource.removeAttribute('aria-invalid');
-    toast('Правило отмечено как проверенное. Применение требует подтверждённых параметров.');
+    const row = document.querySelector('#rules-table [data-rule-ind="' + ind + '"]');
+    if (row){
+      const cell = row.querySelector('.rule-status');
+      cell.innerHTML = '<span class="status-cell sc-ok" data-icon="ok">Подтверждено человеком</span>';
+      applyIcons(cell);
+      row.classList.remove('problem-warn', 'problem-err');
+    }
+    const calc = document.querySelector('#calc-table [data-calc-ind="' + ind + '"] .calc-reason');
+    if (calc){
+      calc.innerHTML = '<span class="status-cell sc-ok" data-icon="ok">Правило подтверждено · балл будет рассчитан по правилу (в макете не считается)</span>';
+      applyIcons(calc);
+      calc.closest('tr').classList.remove('problem-warn', 'problem-err');
+    }
+    if (ind === '6') resolveDev('d9', 'Параметры заданы человеком');
+    if (needMinMax){
+      showDev('d12');
+      toast('Правило подтверждено. Новые min/max затрагивают прошлые годы: см. «Отклонения».');
+    } else {
+      toast('Правило подтверждено человеком.');
+    }
   });
 
   document.querySelectorAll('#err-summary-2 a[data-focus]').forEach(a => {
@@ -2695,19 +3360,243 @@ function printReport(){
   if (confirmBtn) confirmBtn.addEventListener('click', () => {
     const saved = document.getElementById('saved');
     if (!saved) return;
+    const when = new Date().toLocaleString('ru-RU');
+    const draftBadge = document.getElementById('draft-badge');
+    confirmed = true;
     saved.innerHTML = '<strong>Подтверждено</strong>'
-      + '<div style="margin-top:4px">Регион: Новосибирская область · период: 2024 · методика: черновик</div>'
-      + '<div>Подтвердил: текущий администратор · ' + new Date().toLocaleString('ru-RU') + '</div>'
-      + '<div>Значения и статусы баллов сохранены отдельно. Предыдущая версия доступна по ссылке в карточке.</div>';
+      + '<div style="margin-top:4px">Регион: Новосибирская область · период: ' + periodSel.value + ' · методика: ' + methodDesc() + '</div>'
+      + '<div>Подтвердил: текущий администратор · ' + when + '</div>'
+      + '<div>Значения и статусы баллов сохранены отдельно. Предыдущая версия доступна в карточке.</div>';
     saved.classList.add('show');
     confirmBtn.disabled = true;
     confirmBtn.textContent = 'Подтверждено';
+    draftBadge.textContent = 'Подтверждено · НСО · ' + periodSel.value;
+    draftBadge.className = 'status status-ok';
+    document.getElementById('version-badge').textContent = 'Версия 3 создана';
+    document.getElementById('draft-note').textContent = 'Версия подтверждена и действует в дашборде.';
+    renderDrafts();
+    document.getElementById('card-who').textContent = 'текущий администратор';
+    document.getElementById('card-when').textContent = when;
+    document.getElementById('card-body').innerHTML = document.querySelector('#calc-table tbody').innerHTML.replace(/ class="problem-(warn|err)"/g, '');
+    applyIcons(document.getElementById('card-body'));
+    document.getElementById('step-card').disabled = false;
     toast('Обновление подтверждено. Создана новая версия.', () => {
+      confirmed = false;
       saved.classList.remove('show');
       saved.innerHTML = '';
       confirmBtn.textContent = 'Подтвердить загрузку';
+      draftBadge.textContent = 'Черновик · НСО · ' + periodSel.value;
+      draftBadge.className = 'status status-info';
+      document.getElementById('version-badge').textContent = 'Версия не создана';
+      document.getElementById('draft-note').textContent = 'Черновик не влияет на аналитику до подтверждения: дашборд работает по действующим данным. Файлы в макете можно выбрать, но они не распознаются и не сохраняются.';
+      document.getElementById('step-card').disabled = true;
+      goStep(6);
       syncConfirm();
       toast('Подтверждение отменено. Действует прежняя версия.');
+    });
+    goStep('card');
+  });
+
+  /* ---------------- главный экран: черновики ---------------- */
+  const STEP_NAMES = { 1: 'период и файлы', 2: 'структура', 3: 'сопоставление', 4: 'правила баллов', 5: 'расчёт и ограничения', 6: 'подтверждение' };
+  const drafts = { rating: true, update: true };
+  function markDraft(id){ if (!drafts[id]){ drafts[id] = true; renderDrafts(); } }
+  function renderDrafts(){
+    const list = document.getElementById('drafts-list');
+    const items = [];
+    if (drafts.rating && !ratingConfirmed){
+      const n = ratingOpen();
+      items.push({ id: 'rating', title: 'Рейтинг ' + document.getElementById('r-year').value,
+        sub: 'Шаг ' + ratingStep + ' из 4', badge: n ? n + ' не исправлено' : 'ошибок нет', warn: n > 0 });
+    }
+    if (drafts.update && !confirmed){
+      const n = openDevs().length;
+      items.push({ id: 'update', title: 'Показатели НСО · ' + periodSel.value,
+        sub: 'Шаг ' + currentStep + ' из 6: ' + STEP_NAMES[currentStep], badge: n + ' отклонений', warn: n > 0 });
+    }
+    list.innerHTML = items.map(d =>
+      '<div class="card-soft p-4"><div class="flex items-start justify-between gap-3 flex-wrap"><div>'
+      + '<p style="font-weight:600;margin:0">' + escapeHtml(d.title) + '</p><p class="hint" style="margin:2px 0 0">' + escapeHtml(d.sub) + '</p></div>'
+      + '<span class="status ' + (d.warn ? 'status-warn' : 'status-ok') + '">' + escapeHtml(d.badge) + '</span></div>'
+      + '<div class="flex flex-wrap gap-2 mt-3"><button class="btn btn-sm btn-primary" data-draft-go="' + d.id + '">Продолжить загрузку</button>'
+      + '<button class="btn btn-sm btn-danger" data-draft-del="' + d.id + '">Удалить черновик</button></div></div>').join('');
+    document.getElementById('drafts-empty').hidden = items.length > 0;
+    const c = document.getElementById('drafts-count');
+    c.textContent = items.length + ' в работе';
+    c.className = 'status ' + (items.length ? 'status-warn' : 'status-ok');
+    list.querySelectorAll('[data-draft-go]').forEach(b => b.addEventListener('click', () => {
+      if (b.dataset.draftGo === 'rating'){ switchTab('rating'); rGo(ratingStep); }
+      else { switchTab('update'); goStep(currentStep); }
+    }));
+    list.querySelectorAll('[data-draft-del]').forEach(b => b.addEventListener('click', () => {
+      const id = b.dataset.draftDel;
+      openModal('Удалить черновик?', 'Действующие данные и аналитика не пострадают.', 'Удалить черновик', () => {
+        drafts[id] = false; renderDrafts();
+        toast('Черновик удалён. Аналитика работает на подтверждённой версии.', () => { drafts[id] = true; renderDrafts(); toast('Черновик восстановлен.'); });
+      });
+    }));
+  }
+  document.querySelectorAll('[data-home-go]').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.homeGo)));
+  document.querySelectorAll('[data-home-view]').forEach(b => b.addEventListener('click', () => toast(b.dataset.homeView + ': в макете карточка версии не открывается.')));
+
+  /* ---------------- загрузка рейтинга (имитация распознавания) ---------------- */
+  const rSteps = [...document.querySelectorAll('#screen-rating [data-rstep]')];
+  const rFlows = [...document.querySelectorAll('#screen-rating .rflow')];
+  const rFix = { nn: null, tomsk: null, dup: null };   // null — не исправлено, иначе текст решения
+  let ratingStep = 1, ratingConfirmed = false;
+  const ratingOpen = () => Object.values(rFix).filter(v => v === null).length;
+  const RATING_YEARS = { '2025': 'Данных нет. Будет создан новый период.', '2024': 'Год уже загружен: подтверждение создаст новую версию, текущая останется в истории.', '2023': 'Год уже загружен: подтверждение создаст новую версию.', '2022': 'Год уже загружен: подтверждение создаст новую версию.' };
+  const ryear = document.getElementById('r-year');
+  function renderRYear(){
+    document.getElementById('r-year-hint').textContent = RATING_YEARS[ryear.value];
+    document.getElementById('r-sum-year').textContent = ryear.value;
+    if (!ratingConfirmed) document.getElementById('r-badge').textContent = 'Черновик · рейтинг · ' + ryear.value;
+    renderDrafts();
+  }
+  ryear.addEventListener('change', renderRYear);
+
+  function rGo(n){
+    ratingStep = n;
+    rFlows.forEach(f => { f.hidden = +f.dataset.rflow !== n; });
+    rSteps.forEach(b => {
+      const k = +b.dataset.rstep;
+      b.classList.toggle('active', k === n);
+      b.classList.toggle('done', k < n);
+      b.setAttribute('aria-selected', String(k === n));
+    });
+    renderRatingErrors();
+    renderDrafts();
+    const t = rFlows.find(f => +f.dataset.rflow === n);
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  rSteps.forEach(b => b.addEventListener('click', () => rGo(+b.dataset.rstep)));
+  document.querySelectorAll('#screen-rating [data-rnext]').forEach(b => b.addEventListener('click', () => rGo(+b.dataset.rnext)));
+  document.querySelectorAll('#screen-rating [data-rprev]').forEach(b => b.addEventListener('click', () => rGo(+b.dataset.rprev)));
+  document.querySelectorAll('#screen-rating [data-r-save]').forEach(b => b.addEventListener('click', () => {
+    markDraft('rating');
+    toast('Черновик рейтинга сохранён. Рабочие данные не изменены.');
+  }));
+  document.getElementById('r-open-dashboard').addEventListener('click', () => {
+    switchTab('profile');
+    toast(ratingConfirmed ? 'Дашборд показывает подтверждённый рейтинг.' : 'Дашборд показывает действующий рейтинг. Черновик не учитывается.');
+  });
+
+  const num = v => parseFloat(String(v).replace(',', '.'));
+  function renderRatingTable(){
+    const rows = TOP15.slice(0, 8).map(d => {
+      let gov = fmt1(d.gov), biz = fmt1(d.biz), sci = fmt1(d.sci), place = String(d.r24), st = ['ok', 'Распознано'], check = null;
+      let bizVal = d.biz, placeNote = '';
+      if (d.name === 'Нижегородская область'){
+        if (rFix.nn === null){ biz = '<span class="na">—</span>'; bizVal = null; st = ['warn', 'Не распознано']; }
+        else { bizVal = num(rFix.nn); biz = fmt1(bizVal); st = ['info', 'Исправлено вручную']; }
+      }
+      if (d.name === 'Томская область'){
+        if (rFix.tomsk === null){ place = '5'; st = ['err', 'Конфликт']; }
+        else { place = String(rFix.tomsk); st = ['info', 'Исправлено вручную']; }
+      }
+      if (d.name === 'Республика Башкортостан'){
+        if (rFix.dup === null) st = ['warn', 'Дубль'];
+        else st = ['info', rFix.dup];
+      }
+      if (bizVal === null) check = ['warn', 'Не проверить: нет значения'];
+      else {
+        const diff = Math.abs(d.gov + bizVal + d.sci - d.score);
+        check = diff <= 0.1 ? ['ok', 'Сумма сходится'] : ['warn', 'Сумма не сходится: проверьте оригинал'];
+      }
+      const cls = st[0] === 'err' ? ' class="problem-err"' : st[0] === 'warn' ? ' class="problem-warn"' : '';
+      const nso = d.name === NSO_NAME ? ' style="font-weight:600"' : '';
+      return '<tr' + cls + '><td' + nso + '>' + d.name + '</td><td class="num">' + gov + '</td><td class="num">' + biz + '</td><td class="num">' + sci
+        + '</td><td class="num">' + fmt2(d.score) + '</td><td class="center">' + place + '</td>'
+        + '<td><span class="status-cell sc-' + (check[0] === 'ok' ? 'ok' : 'warn') + '" data-icon="' + check[0] + '">' + check[1] + '</span></td>'
+        + '<td><span class="status-cell sc-' + st[0] + '" data-icon="' + st[0] + '">' + st[1] + '</span></td></tr>';
+    });
+    const tb = document.getElementById('r-table');
+    tb.innerHTML = rows.join('');
+    applyIcons(tb);
+  }
+
+  function renderRatingErrors(){
+    const box = document.getElementById('r-err-summary');
+    const msgs = [];
+    if (rFix.nn === null) msgs.push('Нижегородская область: блок «Бизнес» не распознан');
+    if (rFix.tomsk === null) msgs.push('Томская область: место конфликтует с итоговыми баллами');
+    if (rFix.dup === null) msgs.push('Республика Башкортостан: две строки для одного региона');
+    box.hidden = msgs.length === 0;
+    box.innerHTML = '<h4><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.4 15.2 14H.8z" fill="currentColor"/><path d="M7.2 5.6h1.6v4.2H7.2zM7.2 10.8h1.6v1.6H7.2z" fill="#fff"/></svg>'
+      + msgs.length + ' ' + plural(msgs.length, ['проблема требует', 'проблемы требуют', 'проблем требуют']) + ' исправления</h4><ul>'
+      + msgs.map(m => '<li>' + m + '</li>').join('') + '</ul>';
+    document.getElementById('r-sum-open').textContent = ratingOpen();
+    document.getElementById('r-sum-fixed').textContent = Object.values(rFix).filter(v => v !== null).length;
+  }
+
+  function setRFix(key, text, rowId, label, icon){
+    rFix[key] = text;
+    const row = document.getElementById(rowId);
+    row.classList.remove('problem-warn', 'problem-err');
+    row.querySelector('.r-st').innerHTML = '<span class="status-cell sc-' + icon + '" data-icon="' + icon + '">' + label + '</span>';
+    applyIcons(row);
+    renderRatingTable(); renderRatingErrors(); renderDrafts();
+  }
+  document.querySelectorAll('#screen-rating [data-r-fix]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.rFix;
+    if (k === 'nn'){
+      const inp = document.getElementById('r-in-nn'); const v = num(inp.value);
+      if (isNaN(v) || v < 0 || v > 100){ inp.setAttribute('aria-invalid', 'true'); inp.focus(); toast('Введите значение блока «Бизнес» из PDF числом от 0 до 100.'); return; }
+      inp.removeAttribute('aria-invalid');
+      setRFix('nn', String(v), 'r-fix-nn', 'Исправлено вручную', 'info');
+      toast('Значение сохранено и помечено «исправлено вручную».');
+    } else if (k === 'tomsk'){
+      const inp = document.getElementById('r-in-tomsk'); const v = parseInt(inp.value, 10);
+      if (isNaN(v) || v < 1 || v > 85){ inp.setAttribute('aria-invalid', 'true'); inp.focus(); toast('Введите место из PDF целым числом от 1 до 85.'); return; }
+      inp.removeAttribute('aria-invalid');
+      setRFix('tomsk', String(v), 'r-fix-tomsk', 'Исправлено вручную', 'info');
+      toast('Место сохранено и помечено «исправлено вручную».');
+    } else if (k === 'dup'){
+      const pick = document.querySelector('input[name="r-dup"]:checked').value;
+      setRFix('dup', 'Выбрана строка со стр. ' + (pick === 'a' ? '3' : '4'), 'r-fix-dup', 'Выбрана строка со стр. ' + (pick === 'a' ? '3' : '4'), 'ok');
+      toast('Вторая строка исключена из загрузки.');
+    } else {
+      setRFix('dup', 'Обе строки исключены', 'r-fix-dup', 'Обе исключены', 'neutral');
+      toast('Обе строки исключены: у региона не будет значений из этого дубля.');
+    }
+  }));
+  /* подтверждение рейтинга */
+  const rChecks = [...document.querySelectorAll('#r-check-1, #r-check-2')];
+  const rConfirm = document.getElementById('r-confirm');
+  function syncRConfirm(){
+    const ok = rChecks.every(c => c.checked);
+    rConfirm.disabled = !ok || ratingConfirmed;
+    document.getElementById('r-confirm-hint').textContent = ok ? 'Все проверки отмечены.' : 'Кнопка станет доступна после двух отметок выше.';
+  }
+  rChecks.forEach(c => c.addEventListener('change', syncRConfirm));
+  rConfirm.addEventListener('click', () => {
+    const when = new Date().toLocaleString('ru-RU');
+    const open = ratingOpen();
+    const doConfirm = () => {
+      ratingConfirmed = true;
+      const saved = document.getElementById('r-saved');
+      saved.innerHTML = '<strong>Сохранено</strong><div style="margin-top:4px">Рейтинг за ' + ryear.value + ' · версия 4 · подтвердил: текущий администратор · ' + when + '</div>'
+        + '<div>Не исправлено строк: ' + open + (open ? ' (сохраняются со статусом «не распознано», не нулём)' : '') + '. Предыдущая версия (3) осталась в истории.</div>';
+      saved.classList.add('show');
+      rConfirm.disabled = true; rConfirm.textContent = 'Подтверждено';
+      const bd = document.getElementById('r-badge'); bd.textContent = 'Подтверждено · рейтинг · ' + ryear.value; bd.className = 'status status-ok';
+      document.getElementById('r-version').textContent = 'Версия 4 создана';
+      renderDrafts();
+      toast('Рейтинг подтверждён. Создана версия 4.', () => {
+        ratingConfirmed = false; saved.classList.remove('show'); saved.innerHTML = '';
+        rConfirm.textContent = 'Подтвердить загрузку'; syncRConfirm();
+        bd.textContent = 'Черновик · рейтинг · ' + ryear.value; bd.className = 'status status-info';
+        document.getElementById('r-version').textContent = 'Версия не создана';
+        renderDrafts(); toast('Подтверждение отменено. Действует прежняя версия.');
+      });
+    };
+    if (open) openModal('Есть неисправленные строки', 'Не исправлено строк: ' + open + '. Они сохранятся как «не распознано» без значений. Продолжить?', 'Подтвердить', doConfirm);
+    else doConfirm();
+  });
+  document.getElementById('r-cancel').addEventListener('click', () => {
+    openModal('Удалить черновик рейтинга?', 'Действующий рейтинг и аналитика не пострадают.', 'Удалить черновик', () => {
+      drafts.rating = false; rGo(1); renderDrafts();
+      toast('Черновик удалён. Аналитика работает на подтверждённой версии.', () => { drafts.rating = true; renderDrafts(); toast('Черновик восстановлен.'); });
     });
   });
 
@@ -2756,7 +3645,14 @@ function printReport(){
   if (roleSel) roleSel.addEventListener('change', () => applyRole(roleSel.value));
 
   document.addEventListener('DOMContentLoaded', () => {
-    flows.forEach(f => { f.hidden = +f.dataset.flow !== 1; });
+    flows.forEach(f => { f.hidden = f.dataset.flow !== '1'; });
+    renderPeriods();
+    renderDevs();
+    renderProto();
+    renderRYear();
+    renderRatingTable();
+    renderRatingErrors();
+    renderDrafts();
     applyIcons(document);
     renderSources();
     syncConfirm();
